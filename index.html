@@ -1,215 +1,128 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ca">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Copa Catalana Cadet 2026</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- Icona de la bicicleta blava -->
-    <link rel="icon" type="image/png" href="https://img.icons8.com/ios-filled/512/1A73E8/bicycle.png">
-    <link rel="apple-touch-icon" href="https://img.icons8.com/ios-filled/512/1A73E8/bicycle.png">
-    <meta name="theme-color" content="#dc2626">
-
-    <style>
-        .cursa-card { transition: all 0.2s; }
-        .cursa-card:active { transform: scale(0.98); }
-        .btn-disabled { opacity: 0.2; grayscale: 1; pointer-events: none; }
-        /* Animació per al text de propera cursa */
-        .due-pulse { animation: pulse 2s infinite; }
-        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
-    </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>NUMBER15 · Avaluació numèrica</title>
+<style>
+:root{--navy:#17365d;--blue:#2563eb;--pale:#edf2f8;--bg:#f5f7fa;--ink:#253247;--muted:#718096;--line:#e2e8f0}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,Arial,sans-serif}
+header{background:var(--navy);color:white;padding:25px 5%}.head{max-width:1050px;margin:auto}.brand{font-size:11px;letter-spacing:3px;color:#cbd5e1;font-weight:800}h1{margin:8px 0 3px;font-size:34px}header p{margin:0;color:#d5dce7;font-size:14px}
+main{max-width:1050px;margin:28px auto;padding:0 18px 50px}.screen{display:none}.screen.active{display:block}.card,.module{background:white;border:1px solid var(--line);border-radius:17px;padding:22px;box-shadow:0 7px 22px #0f172a08;margin-bottom:16px}
+h2,h3{color:var(--navy);margin:0 0 10px}.intro,.note{color:var(--muted);line-height:1.55}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:14px}.module{display:flex;flex-direction:column;gap:9px;margin:0}.module p{font-size:13px;color:var(--muted);line-height:1.5;flex:1;margin:0}.symbol{font-size:27px}.status{font-size:12px;color:var(--muted);font-weight:700}
+button{font:inherit;cursor:pointer}.btn{background:var(--blue);color:white;border:0;border-radius:11px;padding:13px 17px;font-weight:800}.btn.secondary{background:var(--pale);color:var(--navy)}.btn:disabled{background:#cbd5e1;cursor:not-allowed}.btnrow{display:flex;gap:9px;flex-wrap:wrap;margin-top:15px}
+.field{margin:0 0 15px}.field label,.answer label{display:block;font-size:11px;font-weight:800;letter-spacing:.5px;text-transform:uppercase;color:#64748b;margin-bottom:7px}input,select{width:100%;padding:13px;border:2px solid #e8edf3;border-radius:10px;background:#f8fafc;font:inherit}.two{display:grid;grid-template-columns:1fr 1fr;gap:14px}.choices{display:flex;gap:8px}.choice{flex:1;background:#f8fafc;border:2px solid var(--line);border-radius:10px;padding:11px 5px;font-size:13px;font-weight:700}.choice.selected{background:#dbeafe;border-color:var(--blue);color:var(--blue)}
+.topline{display:flex;justify-content:space-between;color:var(--muted);font-size:13px;font-weight:700}.progress{height:8px;background:#e9eef5;border-radius:9px;overflow:hidden;margin:12px 0 20px}.progress div{height:100%;background:var(--blue);width:0}
+.pill{display:inline-block;background:#eaf2ff;color:var(--navy);border-radius:30px;padding:5px 10px;font-size:11px;font-weight:800}.stage{min-height:210px;display:flex;align-items:center;justify-content:center;text-align:center}.operation{font-size:clamp(36px,7vw,64px);font-weight:850;color:#0f172a;white-space:nowrap}.answer{max-width:330px;margin:auto}.answer input{text-align:center;font-size:24px;font-weight:800}.note{text-align:center;font-size:13px}
+.numberline{width:86%;max-width:760px;margin:20px auto}.labels{display:flex;justify-content:space-between;color:#94a3b8;font-size:24px;font-weight:900;margin-bottom:-14px}.linehit{height:125px;display:flex;align-items:center;position:relative;touch-action:pan-y;cursor:crosshair}.bar{height:5px;width:100%;background:#334155;border-radius:5px}.tick{position:absolute;height:34px;width:2px;background:#334155;top:calc(50% - 17px)}.target{font-size:clamp(58px,10vw,90px);font-weight:900;margin:0}
+.dots{width:100%;height:245px;position:relative;overflow:hidden;border:1px solid #eef2f7;border-radius:13px;background:#f8fafc}.dot{position:absolute;width:13px;height:13px;background:#2563eb;border-radius:50%}.dots.hidden .dot{display:none}
+footer{text-align:center;color:#94a3b8;font-size:12px;padding:20px}
+@media(max-width:650px){header h1{font-size:28px}.card,.module{padding:17px}.two{grid-template-columns:1fr}.numberline{width:94%}.dots{height:220px}}
+</style>
 </head>
-<body class="bg-slate-100 pb-10 font-sans text-slate-900">
+<body>
+<header><div class="head"><div class="brand">NEUREKALAB · AVALUACIÓ</div><h1>NUMBER15</h1><p>Avaluació de competències numèriques</p></div></header>
+<main>
+<section id="home" class="screen active">
+ <div class="card"><h2>Benvingut/da a NUMBER15</h2><p class="intro">Aplicació d'avaluació numèrica amb dades personals centralitzades i tres mòduls de prova. Introdueix les dades una sola vegada i després accedeix als mòduls.</p><button class="btn" onclick="screen('profile')">Introduir dades i començar</button></div>
+ <div class="grid">
+  <div class="module"><div class="symbol">👤</div><h3>Dades personals</h3><p>Identificació i característiques de la sessió.</p></div>
+  <div class="module"><div class="symbol">➕</div><h3>Càlcul mental</h3><p>20 sumes i restes de dos i tres dígits.</p></div>
+  <div class="module"><div class="symbol">🔵</div><h3>Estimació</h3><p>25 estímuls de boletes blaves, exposats 500 ms.</p></div>
+  <div class="module"><div class="symbol">〰️</div><h3>Recta numèrica</h3><p>10 nombres per situar entre 0 i 100.</p></div>
+ </div>
+</section>
 
-    <div class="max-w-md mx-auto">
-        <!-- Capçalera modificada segons el teu codi -->
-        <header class="bg-blue-600 text-white p-6 shadow-lg text-center mb-6 rounded-b-3xl">
-            <h1 class="text-2xl font-black tracking-wider text-white uppercase leading-none">Copa Catalana 2026</h1>
-            <p class="text-[10px] font-bold opacity-90 uppercase tracking-[0.2em] mt-2">Cadet</p>
-            <p class="text-[10px] font-bold opacity-90 uppercase tracking-[0.2em] mt-2">ProRide Jufré Cycling Team</p>
-        </header>
+<section id="profile" class="screen"><div class="card">
+ <h2>Dades personals</h2><p class="intro">Aquestes dades s'associaran a tots els mòduls.</p>
+ <div class="field"><label>Sexe</label><div class="choices"><button class="choice" data-sex="Masculí" onclick="pick(this,'sex')">Masculí</button><button class="choice" data-sex="Femení" onclick="pick(this,'sex')">Femení</button></div></div>
+ <div class="two"><div class="field"><label>Data de naixement</label><input type="date" id="birth"></div><div class="field"><label>Nivell d'estudis</label><select id="education"><option value="">Selecciona...</option><option>1r ESO</option><option>2n ESO</option><option>3r ESO</option><option>4t ESO</option><option>1r Batx</option><option>2n Batx</option><option>1r GM</option><option>2n GM</option><option>Universitari</option><option>Grau Superior</option><option>Graduat</option></select></div></div>
+ <div class="field"><label>Dispositiu</label><div class="choices"><button class="choice" onclick="pick(this,'device')">📱 Mòbil</button><button class="choice" onclick="pick(this,'device')">📟 Tablet</button><button class="choice" onclick="pick(this,'device')">💻 PC</button></div></div>
+ <button class="btn" onclick="saveProfile()">Desar dades i continuar</button><p id="profile-error" class="note"></p>
+</div></section>
 
-        <!-- Llista de Curses -->
-        <div id="llista-curses" class="px-4 space-y-5">
-            <!-- Es genera automàticament -->
-         <script>
-        // --- DADES DE LES CURSES (LES TEVES DADES ACTUALITZADES) ---
-        const curses = [
-            { 
-                data: "23/05/2026", 
-                nom: "XII MEMORIAL JOSEP SEGÚ", 
-                lloc: "La Garriga",
-                maps: "https://www.google.com/maps/search/?api=1&query=El+Passeig+La+Garriga",
-                web: "https://www.ciclisme.cat/cursa/carretera/xii-memorial-josep-segu-cadet",
-                pdf: "https://hipocamp.github.io/copacadet2026/instruccions_lagarriga.pdf",
-                fotos: "https://drive.google.com/drive/folders/1EcFZvGEbFthirTpSByyLqJFvLpJw43GU?usp=drive_link"
-            },
-            { 
-                data: "13/06/2026", 
-                nom: "Campionat de Catalunya de CRI", 
-                lloc: "El Poal",
-                maps: "https://www.google.com/maps/search/?api=1&query=El+Poal",
-                web: "https://www.ciclisme.cat/cursa/carretera/campionat-de-catalunya-de-cri-0",
-                pdf: "",
-                fotos: ""
-            },
-            { 
-                data: "28/06/2026", 
-                nom: "Trofeu Verbena Sant Joan",
-                lloc: "Montornès del Vallès",
-                maps: "https://www.google.com/maps/search/?api=1&query=Carrer+Federico+Garcia+Lorca+Montornès+del+Vallès",
-                web: "https://www.ciclisme.cat/cursa/carretera/trofeo-verbena-san-juan",
-                pdf: "https://hipocamp.github.io/copacadet2026/Info_verbena.pdf",
-                fotos: ""
-            },
-            { 
-                data: "11/07/2026", 
-                nom: "Copa Catalana Cadet - Reus", 
-                lloc: "Reus",
-                maps: "https://www.google.com/maps/search/?api=1&query=Carrer+Hongria+Reus",
-                web: "https://www.ciclisme.cat/cursa/carretera/copa-catalana-cadet-reus",
-                pdf: "https://hipocamp.github.io/copacadet2026/instruccions_reus.pdf",
-                fotos: ""
-            },
-            { 
-                data: "19/07/2026", 
-                nom: "II Trofeu Naut Aran", 
-                lloc: "Baqueira 1500 (Naut Aran)",
-                maps: "https://maps.app.goo.gl/jQ7rvmDUKhK6ZaXC7",
-                web: "https://www.ciclisme.cat/cursa/carretera/ii-trofeu-naut-aran-cadet",
-                pdf: "https://hipocamp.github.io/copacadet2026/instruccions_aran.pdf",
-                fotos: ""
-            },
-            { 
-                data: "01/08/2026", 
-                nom: "3a Edició Critèrium Ivan Graït", 
-                lloc: "Ivars de Noguera",
-                maps: "https://maps.app.goo.gl/jrYpMcJ1YXbgkzCF8",
-                web: "https://www.ciclisme.cat/cursa/carretera/3a-edicio-criterium-ivan-grait-cadet",
-                pdf: "https://hipocamp.github.io/copacadet2026/instruccions_ivars.pdf",
-                fotos: ""
-            },
-            { 
-                data: "15/08/2026", 
-                nom: "61è GRAN PREMI FESTA MAJOR MALGRAT DE MAR", 
-                lloc: "Malgrat de Mar",
-                maps: "https://www.google.com/maps/search/?api=1&query=Avinguda+Costa+Brava+Malgrat+de+Mar",
-                web: "https://www.ciclisme.cat/cursa/carretera/61e-gran-premi-festa-major-malgrat-de-mar-cadet",
-                pdf: "https://hipocamp.github.io/copacadet2026/info_malgrat.pdf",
-                fotos: ""
-            },
-            { 
-                data: "23/08/2026", 
-                nom: "V MEMORIAL PEDRO TIRADO", 
-                lloc: "Amposta",
-                maps: "https://www.google.com/maps/search/?api=1&query=Carrer+Brasil+Amposta",
-                web: "https://www.ciclisme.cat/cursa/carretera/v-memorial-pedro-tirado",
-                pdf: "https://hipocamp.github.io/copacadet2026/info_ptirado.pdf",
-                fotos: ""
-            },
-            { 
-                data: "30/08/2026", 
-                nom: "49è Trofeu Quirze Martí", 
-                lloc: "Barcelona",
-                maps: "https://www.google.com/maps/search/?api=1&query=Carrer+Riego+2+Barcelona",
-                web: "https://www.ciclisme.cat/cursa/carretera/49e-trofeu-quirze-marti",
-                pdf: "https://hipocamp.github.io/copacadet2026/info_quirzemarti.pdf",
-                fotos: ""
-            },
-             { 
-                data: "20/09/2026", 
-                nom: "VXI TROFEU ISAAC GÁLVEZ", 
-                lloc: "Vilanova i la Geltrú",
-                maps: "https://maps.app.goo.gl/wVdHJUt34YXBdotQ6",
-                web: "https://www.ciclisme.cat/cursa/carretera/vxi-trofeu-isaac-galvez",
-                pdf: "https://hipocamp.github.io/copacadet2026/info_isaacgalvez.pdf",
-                fotos: "https://drive.google.com/drive/folders/1osKdk9kTCmV17x8HK275fH-HFzlmZree?usp=sharing"
-            },
-            { 
-                data: "20/09/2026", 
-                nom: "TROFEU ISAAC GÁLVEZ - MAMIS i PAPIS", 
-                lloc: "Vilanova i la Geltrú",
-                maps: "https://maps.app.goo.gl/wVdHJUt34YXBdotQ6",
-                web: "https://www.ciclisme.cat/cursa/carretera/trofeu-isaac-galvez-papis-i-mamis",
-                pdf: "",
-                fotos: ""
-            },
-            { 
-                data: "27/09/2026", 
-                nom: "GP Ajuntament de Sant Boi", 
-                lloc: "Sant Boi de Llobregat",
-                maps: "https://goo.gl/maps/MwbKboByiVVWyRQA9",
-                web: "https://www.ciclisme.cat/cursa/carretera/copa-catalana-cadet-gp-ajuntament-de-sant-boi-cadet",
-                pdf: "https://hipocamp.github.io/copacadet2026/info_santboi.pdf",
-                fotos: ""
-            }
-        ];
+<section id="hub" class="screen">
+ <div class="card"><h2>Panell d'avaluació</h2><p class="intro">Pots completar els mòduls en qualsevol ordre. Els resultats es conserven en aquesta sessió fins que tanquis o recarreguis la pàgina.</p><p id="profile-summary" class="note"></p></div>
+ <div class="grid">
+  <div class="module"><div class="symbol">➕</div><h3>Càlcul mental</h3><p>20 operacions de dificultat creixent.</p><div class="status" id="ms">Pendent</div><button class="btn" onclick="startMental()">Iniciar mòdul</button></div>
+  <div class="module"><div class="symbol">🔵</div><h3>Estimació</h3><p>25 estímuls amb exposició de 500 ms.</p><div class="status" id="es">Pendent</div><button class="btn" onclick="startEstimate()">Iniciar mòdul</button></div>
+  <div class="module"><div class="symbol">〰️</div><h3>Recta numèrica</h3><p>10 estímuls en una línia del 0 al 100.</p><div class="status" id="ls">Pendent</div><button class="btn" onclick="startLine()">Iniciar mòdul</button></div>
+ </div>
+ <div class="card" style="margin-top:16px"><h3>Resultats</h3><p class="note">Exporta un CSV amb una fila per estímul, les dades personals i els indicadors resumits del càlcul mental.</p><div class="btnrow"><button class="btn" onclick="downloadCSV()">Descarregar CSV</button><button class="btn secondary" onclick="resetAll()">Reiniciar sessió</button></div></div>
+</section>
 
-        const container = document.getElementById('llista-curses');
+<section id="mental" class="screen"><div class="card">
+ <div class="topline"><span>CÀLCUL MENTAL</span><span id="mc">1 / 20</span></div><div class="progress"><div id="mp"></div></div><div class="center"><span class="pill" id="mcat">SUMA · 2 DÍGITS</span></div>
+ <div class="stage"><div class="operation" id="op">24 + 13 =</div></div>
+ <div class="answer"><label for="manswer">La teva resposta</label><input id="manswer" type="number" inputmode="numeric" placeholder="Escriu el resultat"><button class="btn" style="width:100%;margin-top:12px" onclick="submitMental()">Validar resposta</button></div><p id="mnote" class="note">Respon tan ràpid i bé com puguis.</p>
+</div></section>
 
-        // Funció per saber si la cursa ja ha passat
-        function esCursaPassada(dataString) {
-            const [dia, mes, any] = dataString.split('/');
-            const dataCursa = new Date(any, mes - 1, dia);
-            const avui = new Date();
-            avui.setHours(0,0,0,0);
-            return dataCursa < avui;
-        }
+<section id="estimate" class="screen"><div class="card">
+ <div class="topline"><span>ESTIMACIÓ</span><span id="ec">1 / 25</span></div><div class="progress"><div id="ep"></div></div><div class="center"><span class="pill" id="ecat">ESTIMACIÓ DE QUANTITATS</span></div>
+ <div class="stage"><div id="dots" class="dots"></div></div>
+ <div class="answer"><label for="eanswer">Quantes boletes has vist?</label><input id="eanswer" type="number" min="0" max="100" inputmode="numeric" placeholder="Escriu la quantitat"><button class="btn" id="esubmit" style="width:100%;margin-top:12px" onclick="submitEstimate()" disabled>Validar resposta</button></div><p id="enote" class="note">Les boletes apareixeran durant 500 mil·lisegons.</p>
+</div></section>
 
-        curses.forEach(cursa => {
-            const jaFeta = esCursaPassada(cursa.data);
-            
-            // Lògica de colors i estats
-            const colorBorda = jaFeta ? "border-red-500 bg-red-50/20" : "border-green-500 bg-white";
-            const badge = jaFeta ? 
-                `<span class="bg-red-100 text-red-600 text-[8px] font-black px-2 py-0.5 rounded-full uppercase">Finalitzada</span>` : 
-                `<span class="bg-green-100 text-green-600 text-[8px] font-black px-2 py-0.5 rounded-full uppercase due-pulse">Propera</span>`;
+<section id="line" class="screen"><div class="card">
+ <div class="topline"><span>RECTA NUMÈRICA</span><span id="lc">1 / 10</span></div><div class="progress"><div id="lp"></div></div>
+ <div class="stage" style="min-height:150px;flex-direction:column"><span class="pill">UBICA EL NOMBRE</span><h1 class="target" id="ltarget" style="visibility:hidden">--</h1></div>
+ <div class="numberline"><div class="labels"><span>0</span><span>100</span></div><div class="linehit" id="linehit"><div class="bar"></div><div class="tick" style="left:0"></div><div class="tick" style="right:0"></div></div></div><p class="note">Toca o fes clic a la posició que consideris correcta.</p>
+</div></section>
 
-            const card = document.createElement('div');
-            card.className = `cursa-card rounded-3xl shadow-sm border-l-[12px] p-5 ${colorBorda} border border-slate-200`;
-            
-            const pdfClass = cursa.pdf === "" ? "btn-disabled" : "";
-            const fotosClass = cursa.fotos === "" ? "btn-disabled" : "";
+<section id="done" class="screen"><div class="card"><h2 id="done-title">Mòdul completat</h2><p id="done-message" class="intro"></p><button class="btn" onclick="toHub()">Tornar al panell</button><button class="btn secondary" style="margin-left:7px" onclick="downloadCSV()">Descarregar CSV</button></div></section>
+</main><footer>NUMBER15 · NeurekaLAB</footer>
 
-            card.innerHTML = `
-                <div class="mb-4">
-                    <div class="flex justify-between items-start">
-                        <p class="text-slate-500 font-black text-[10px] uppercase tracking-widest">${cursa.data}</p>
-                        ${badge}
-                    </div>
-                    <h2 class="text-xl font-bold text-slate-800 leading-tight mt-1">${cursa.nom}</h2>
-                    <p class="text-slate-400 text-xs font-bold mt-1 uppercase tracking-tight">📍 ${cursa.lloc}</p>
-                </div>
+<script>
+const profile={sex:'',birth:'',education:'',device:''},data={mental:[],estimate:[],line:[]};
+let mTrials=[],mi=0,mStart=0,eTrials=[],ei=0,eStart=0,lTrials=[],li=0,lStart=0,lineReady=false;
+const $=id=>document.getElementById(id),rand=(a,b)=>Math.floor(Math.random()*(b-a+1))+a;
+function screen(id){document.querySelectorAll('.screen').forEach(x=>x.classList.remove('active'));$(id).classList.add('active');window.scrollTo(0,0)}
+function pick(el,type){document.querySelectorAll(type==='sex'?'[data-sex]':'.choices button:not([data-sex])').forEach(x=>x.classList.remove('selected'));el.classList.add('selected');if(type==='sex')profile.sex=el.dataset.sex;else profile.device=el.textContent.replace(/[📱📟💻]/g,'').trim()}
+function saveProfile(){profile.birth=$('birth').value;profile.education=$('education').value;if(!profile.sex||!profile.birth||!profile.education||!profile.device){$('profile-error').textContent='Completa tots els camps abans de continuar.';return}if(new Date(profile.birth)>new Date()){$('profile-error').textContent='La data de naixement no pot ser futura.';return}$('profile-summary').textContent=`Sexe: ${profile.sex} · Naixement: ${profile.birth} · Estudis: ${profile.education} · Dispositiu: ${profile.device}`;screen('hub')}
+function toHub(){updateStatus();screen('hub')}
+function updateStatus(){$('ms').textContent=data.mental.length?'Completat · 20/20':'Pendent';$('es').textContent=data.estimate.length?'Completat · 25/25':'Pendent';$('ls').textContent=data.line.length?'Completat · 10/10':'Pendent'}
+function done(title,msg){$('done-title').textContent=title;$('done-message').textContent=msg;updateStatus();screen('done')}
+function shuffle(a){for(let i=a.length-1;i>0;i--){let j=rand(0,i);[a[i],a[j]]=[a[j],a[i]]}return a}
+function makeMental(){
+ let a=[];
+ // Sumes de dos dígits: progressió de dificultat i presència creixent de portar-ne.
+ for(let i=0;i<5;i++){let x,y;do{x=rand(12+i*7,39+i*10);y=rand(11+i*8,35+i*12)}while((i===0&&x%10+y%10>=10)||(i>0&&x%10+y%10<10));a.push({op:'+',kind:'Suma',digits:2,x,y,answer:x+y,cat:'Suma_2_digits'})}
+ // Sumes de tres dígits.
+ for(let i=0;i<5;i++){let x,y;do{x=rand(112+i*90,390+i*100);y=rand(101+i*70,350+i*110)}while((i===0&&x%10+y%10>=10)||(i>0&&x%10+y%10<10));a.push({op:'+',kind:'Suma',digits:3,x,y,answer:x+y,cat:'Suma_3_digits'})}
+ // Restes de dos dígits: de sense préstec a amb préstec.
+ for(let i=0;i<5;i++){let x,y;do{x=rand(45+i*5,99);y=rand(10,Math.min(80,x-1))}while((i===0&&x%10<y%10)||(i>0&&x%10>=y%10));a.push({op:'−',kind:'Resta',digits:2,x,y,answer:x-y,cat:'Resta_2_digits'})}
+ // Restes de tres dígits.
+ for(let i=0;i<5;i++){let x,y;do{x=rand(350,999);y=rand(100,Math.min(800,x-1))}while((i===0&&x%10<y%10)||(i>0&&x%10>=y%10));a.push({op:'−',kind:'Resta',digits:3,x,y,answer:x-y,cat:'Resta_3_digits'})}
+ return a
+}
+function startMental(){mTrials=makeMental();mi=0;data.mental=[];screen('mental');renderMental()}
+function renderMental(){if(mi>=20){done('Càlcul mental completat',`Has completat les 20 operacions. Encerts: ${data.mental.filter(x=>x.correct).length}/20.`);return}let t=mTrials[mi];$('mc').textContent=`${mi+1} / 20`;$('mp').style.width=`${mi/20*100}%`;$('mcat').textContent=`${t.kind.toUpperCase()} · ${t.digits} DÍGITS`;$('op').textContent=`${t.x} ${t.op} ${t.y} =`;$('manswer').value='';$('mnote').textContent='Respon tan ràpid i bé com puguis.';mStart=performance.now();$('manswer').focus()}
+function submitMental(){let raw=$('manswer').value;if(raw.trim()===''){$('mnote').textContent='Escriu una resposta abans de continuar.';return}let t=mTrials[mi],response=Number(raw),time=Math.round(performance.now()-mStart);data.mental.push({trial:mi+1,category:t.cat,operation:`${t.x} ${t.op} ${t.y}`,response,correctAnswer:t.answer,correct:response===t.answer,timeMs:time});mi++;renderMental()}
+$('manswer').addEventListener('keydown',e=>{if(e.key==='Enter')submitMental()});
 
-                <div class="grid grid-cols-2 gap-2">
-                    <!-- BOTÓ MAPS -->
-                    <a href="${cursa.maps}" target="_blank" class="flex flex-col items-center justify-center bg-blue-500 text-white py-3 rounded-2xl shadow-lg shadow-blue-100">
-                        <span class="text-lg">📍</span>
-                        <span class="text-[9px] font-black uppercase mt-1 tracking-tighter">Com anar-hi</span>
-                    </a>
-                    
-                    <!-- BOTÓ INFO WEB -->
-                    <a href="${cursa.web}" target="_blank" class="flex flex-col items-center justify-center bg-slate-800 text-white py-3 rounded-2xl shadow-lg shadow-slate-200">
-                        <span class="text-lg">🌐</span>
-                        <span class="text-[9px] font-black uppercase mt-1 tracking-tighter">Inscripció</span>
-                    </a>
+/* 25 estímuls. Es mantenen literalment els intervals demanats: 31–41 i 41–50; el 41 pot pertànyer a tots dos grups. */
+function makeEstimate(){let a=[];[[1,4,'1–4'],[5,20,'5–20'],[21,30,'21–30'],[31,41,'31–41'],[41,50,'41–50']].forEach(([lo,hi,range],g)=>{for(let i=0;i<5;i++)a.push({actual:rand(lo,hi),range,group:g+1})});return a}
+function startEstimate(){eTrials=makeEstimate();ei=0;data.estimate=[];screen('estimate');renderEstimate()}
+function renderEstimate(){if(ei>=25){done('Estimació completada','Has completat els 25 estímuls. S’han registrat la quantitat estimada, la quantitat real i el temps de resposta.');return}let t=eTrials[ei];$('ec').textContent=`${ei+1} / 25`;$('ep').style.width=`${ei/25*100}%`;$('ecat').textContent=`INTERVAL ${t.range}`;$('eanswer').value='';$('esubmit').disabled=true;$('enote').textContent='Observa l’estímul i estima quantes boletes hi havia.';let box=$('dots');box.innerHTML='';box.classList.remove('hidden');let w=box.clientWidth||500,h=box.clientHeight||245,points=[];for(let i=0;i<t.actual;i++){let x,y,tries=0;do{x=rand(8,w-21);y=rand(8,h-21);tries++}while(tries<60&&points.some(p=>Math.hypot(p.x-x,p.y-y)<15));points.push({x,y});let d=document.createElement('i');d.className='dot';d.style.left=x+'px';d.style.top=y+'px';box.appendChild(d)}eStart=performance.now();setTimeout(()=>{box.classList.add('hidden');$('esubmit').disabled=false;$('enote').textContent='Escriu quantes boletes creus que has vist.';$('eanswer').focus()},500)}
+function submitEstimate(){let raw=$('eanswer').value;if(raw.trim()===''||!Number.isFinite(Number(raw))||Number(raw)<0){$('enote').textContent='Introdueix una quantitat vàlida.';return}let t=eTrials[ei];data.estimate.push({trial:ei+1,range:t.range,actual:t.actual,response:Number(raw),timeMs:Math.round(performance.now()-eStart)});ei++;renderEstimate()}
+$('eanswer').addEventListener('keydown',e=>{if(e.key==='Enter'&&!$('esubmit').disabled)submitEstimate()});
 
-                    <!-- BOTÓ PDF (Instruccions) -->
-                    <a href="${cursa.pdf}" target="_blank" class="${pdfClass} flex flex-col items-center justify-center bg-orange-500 text-white py-3 rounded-2xl shadow-lg shadow-orange-100">
-                        <span class="text-lg">📄</span>
-                        <span class="text-[9px] font-black uppercase mt-1 tracking-tighter">Convocatòria</span>
-                    </a>
+/* Recta numèrica: manté 10 valors, un per cada tram de desenes, clic proporcional, error absolut i temps. */
+function makeLine(){let a=[];for(let i=0;i<10;i++){let lo=i*10,hi=(i+1)*10-1;if(lo===0)lo=1;if(hi>=100)hi=99;a.push(rand(lo,hi))}return shuffle(a)}
+function startLine(){lTrials=makeLine();li=0;data.line=[];screen('line');$('ltarget').style.visibility='hidden';lineReady=false;setTimeout(renderLine,2000)}
+function renderLine(){if(li>=10){done('Recta numèrica completada','Has completat els 10 estímuls. S’han registrat la resposta, l’error absolut i el temps de resposta.');return}$('lc').textContent=`${li+1} / 10`;$('lp').style.width=`${li/10*100}%`;$('ltarget').textContent=lTrials[li];$('ltarget').style.visibility='visible';lStart=performance.now();lineReady=true}
+$('linehit').addEventListener('pointerdown',e=>{if(!lineReady)return;lineReady=false;let r=$('linehit').getBoundingClientRect(),guess=Math.round(Math.max(0,Math.min(1,(e.clientX-r.left)/r.width))*100),target=lTrials[li];data.line.push({trial:li+1,target,response:guess,error:Math.abs(target-guess),timeMs:Math.round(performance.now()-lStart)});$('ltarget').style.visibility='hidden';li++;setTimeout(renderLine,2000)});
 
-                    <!-- BOTÓ FOTOS -->
-                    <a href="${cursa.fotos}" target="_blank" class="${fotosClass} flex flex-col items-center justify-center bg-emerald-500 text-white py-3 rounded-2xl shadow-lg shadow-emerald-100">
-                        <span class="text-lg">📸</span>
-                        <span class="text-[9px] font-black uppercase mt-1 tracking-tighter">Fotos Cursa</span>
-                    </a>
-                </div>
-            `;
-            container.appendChild(card);
-        });
-    </script>
+/* CSV: una fila per prova; en càlcul mental incorpora encerts i temps mitjà dels encerts per categoria. */
+function cell(v){return '"'+String(v??'').replace(/"/g,'""')+'"'}
+function downloadCSV(){if(!profile.sex){alert('Introdueix primer les dades personals.');return}let groups=['Suma_2_digits','Suma_3_digits','Resta_2_digits','Resta_3_digits'],sum={};groups.forEach(g=>{let s=data.mental.filter(x=>x.category===g),c=s.filter(x=>x.correct);sum[g]={hits:c.length,mean:c.length?Math.round(c.reduce((n,x)=>n+x.timeMs,0)/c.length):''}});let rows=[];
+ data.mental.forEach(x=>rows.push({Modul:'CalculMental',Intent:x.trial,Categoria:x.category,Operacio:x.operation,Resposta:x.response,RespostaCorrecta:x.correctAnswer,Encert:x.correct?'Sí':'No',TempsResposta_ms:x.timeMs,EncertsCategoria:sum[x.category].hits,TempsMitjaEncertsCategoria_ms:sum[x.category].mean}));
+ data.estimate.forEach(x=>rows.push({Modul:'Estimacio',Intent:x.trial,Categoria:x.range,NombreReal:x.actual,NombreEstimat:x.response,ErrorAbsolut:Math.abs(x.actual-x.response),TempsResposta_ms:x.timeMs}));
+ data.line.forEach(x=>rows.push({Modul:'RectaNumerica',Intent:x.trial,NombreReal:x.target,NombreEstimat:x.response,RespostaCorrecta:x.target,Resposta:x.response,ErrorAbsolut:x.error,TempsResposta_ms:x.timeMs}));
+ if(!rows.length){alert('Encara no hi ha resultats per exportar.');return}
+ const common={Sexe:profile.sex,DataNaixement:profile.birth,NivellEstudis:profile.education,Dispositiu:profile.device};rows=rows.map(r=>({...common,...r}));
+ let headers=[...new Set(rows.flatMap(r=>Object.keys(r)))],csv=[headers.map(cell).join(';'),...rows.map(r=>headers.map(h=>cell(r[h])).join(';'))].join('\r\n'),blob=new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8;'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=`NUMBER15_resultats_${new Date().toISOString().slice(0,10)}.csv`;document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url)}
+function resetAll(){if(!confirm('Vols esborrar les dades i els resultats d’aquesta sessió?'))return;Object.keys(data).forEach(k=>data[k]=[]);Object.keys(profile).forEach(k=>profile[k]='');document.querySelectorAll('.choice').forEach(x=>x.classList.remove('selected'));$('birth').value='';$('education').value='';$('profile-error').textContent='';updateStatus();screen('home')}
+</script>
 </body>
 </html>
