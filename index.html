@@ -77,6 +77,7 @@ footer{text-align:center;color:#94a3b8;font-size:12px;padding:20px}
 
 <main>
 
+<!-- INICI -->
 <section id="home" class="screen active">
  <div class="card">
   <h2>Benvingut/da a NUMBER15</h2>
@@ -108,6 +109,7 @@ footer{text-align:center;color:#94a3b8;font-size:12px;padding:20px}
  </div>
 </section>
 
+<!-- DADES PERSONALS -->
 <section id="profile" class="screen">
  <div class="card">
   <h2>Dades personals</h2>
@@ -159,6 +161,7 @@ footer{text-align:center;color:#94a3b8;font-size:12px;padding:20px}
  </div>
 </section>
 
+<!-- PANELL -->
 <section id="hub" class="screen">
  <div class="card">
   <h2>Panell d'avaluació</h2>
@@ -202,6 +205,7 @@ footer{text-align:center;color:#94a3b8;font-size:12px;padding:20px}
  </div>
 </section>
 
+<!-- CÀLCUL MENTAL -->
 <section id="mental" class="screen">
  <div class="card">
   <div class="topline">
@@ -209,12 +213,12 @@ footer{text-align:center;color:#94a3b8;font-size:12px;padding:20px}
    <span id="mc">1 / 20</span>
   </div>
   <div class="progress"><div id="mp"></div></div>
-  <div class="center">
-   <span class="pill" id="mcat">SUMA · 2 DÍGITS</span>
-  </div>
+  <div class="center"><span class="pill" id="mcat">SUMA · 2 DÍGITS</span></div>
+
   <div class="stage">
    <div class="operation" id="op">24 + 13 =</div>
   </div>
+
   <div class="answer">
    <label for="manswer">La teva resposta</label>
    <input id="manswer" type="number" inputmode="numeric" placeholder="Escriu el resultat">
@@ -224,6 +228,7 @@ footer{text-align:center;color:#94a3b8;font-size:12px;padding:20px}
  </div>
 </section>
 
+<!-- ESTIMACIÓ -->
 <section id="estimate" class="screen">
  <div class="card">
   <div class="topline">
@@ -231,12 +236,11 @@ footer{text-align:center;color:#94a3b8;font-size:12px;padding:20px}
    <span id="ec">1 / 25</span>
   </div>
   <div class="progress"><div id="ep"></div></div>
-  <div class="center">
-   <span class="pill" id="ecat">ESTIMACIÓ DE QUANTITATS</span>
-  </div>
+
   <div class="stage">
    <div id="dots" class="dots"></div>
   </div>
+
   <div class="answer">
    <label for="eanswer">Quantes boletes has vist?</label>
    <input id="eanswer" type="number" min="0" max="100" inputmode="numeric" placeholder="Escriu la quantitat">
@@ -246,6 +250,26 @@ footer{text-align:center;color:#94a3b8;font-size:12px;padding:20px}
  </div>
 </section>
 
+<!-- PANTALLA SEGÜENT -->
+<section id="estimateNext" class="screen">
+ <div class="card">
+  <div class="topline">
+   <span>ESTIMACIÓ</span>
+   <span id="enextcount">1 / 25</span>
+  </div>
+
+  <div class="stage" style="min-height:260px;flex-direction:column">
+   <h1 class="target" style="font-size:clamp(48px,9vw,76px)">SEGÜENT</h1>
+   <p class="note">Prem el botó quan estiguis preparat/da per veure el següent estímul.</p>
+  </div>
+
+  <div class="answer">
+   <button class="btn" id="enextbutton" style="width:100%" onclick="nextEstimate()">SEGÜENT</button>
+  </div>
+ </div>
+</section>
+
+<!-- RECTA NUMÈRICA -->
 <section id="line" class="screen">
  <div class="card">
   <div class="topline">
@@ -253,10 +277,12 @@ footer{text-align:center;color:#94a3b8;font-size:12px;padding:20px}
    <span id="lc">1 / 10</span>
   </div>
   <div class="progress"><div id="lp"></div></div>
+
   <div class="stage" style="min-height:150px;flex-direction:column">
    <span class="pill">UBICA EL NOMBRE</span>
    <h1 class="target" id="ltarget" style="visibility:hidden">--</h1>
   </div>
+
   <div class="numberline">
    <div class="labels"><span>0</span><span>100</span></div>
    <div class="linehit" id="linehit">
@@ -269,6 +295,7 @@ footer{text-align:center;color:#94a3b8;font-size:12px;padding:20px}
  </div>
 </section>
 
+<!-- FINAL DE MÒDUL -->
 <section id="done" class="screen">
  <div class="card">
   <h2 id="done-title">Mòdul completat</h2>
@@ -279,22 +306,11 @@ footer{text-align:center;color:#94a3b8;font-size:12px;padding:20px}
 </section>
 
 </main>
-
 <footer>NUMBER15 · NeurekaLAB</footer>
 
 <script>
-const profile={
- sex:'',
- birth:'',
- education:'',
- device:''
-};
-
-const data={
- mental:[],
- estimate:[],
- line:[]
-};
+const profile={sex:'',birth:'',education:'',device:''};
+const data={mental:[],estimate:[],line:[]};
 
 let mTrials=[],mi=0,mStart=0;
 let eTrials=[],ei=0,eStart=0;
@@ -310,17 +326,10 @@ function showScreen(id){
 }
 
 function pick(el,type){
- document.querySelectorAll(
-  type==='sex'?'[data-sex]':'.choices button:not([data-sex])'
- ).forEach(x=>x.classList.remove('selected'));
-
+ document.querySelectorAll(type==='sex'?'[data-sex]':'.choices button:not([data-sex])').forEach(x=>x.classList.remove('selected'));
  el.classList.add('selected');
-
- if(type==='sex'){
-  profile.sex=el.dataset.sex;
- }else{
-  profile.device=el.textContent.replace(/[📱📟💻]/g,'').trim();
- }
+ if(type==='sex')profile.sex=el.dataset.sex;
+ else profile.device=el.textContent.replace(/[📱📟💻]/g,'').trim();
 }
 
 function saveProfile(){
@@ -337,9 +346,7 @@ function saveProfile(){
   return;
  }
 
- $('profile-summary').textContent=
-  `Sexe: ${profile.sex} · Naixement: ${profile.birth} · Estudis: ${profile.education} · Dispositiu: ${profile.device}`;
-
+ $('profile-summary').textContent=`Sexe: ${profile.sex} · Naixement: ${profile.birth} · Estudis: ${profile.education} · Dispositiu: ${profile.device}`;
  showScreen('hub');
 }
 
@@ -369,14 +376,7 @@ function shuffle(a){
  return a;
 }
 
-/* =====================================================
-   MÒDUL 1 · CÀLCUL MENTAL
-   5 sumes de dos dígits
-   5 sumes de tres dígits
-   5 restes de dos dígits
-   5 restes de tres dígits
-===================================================== */
-
+/* CÀLCUL MENTAL */
 function makeMental(){
  let a=[];
 
@@ -386,19 +386,9 @@ function makeMental(){
   do{
    x=rand(12+i*7,39+i*10);
    y=rand(11+i*8,35+i*12);
-  }while(
-   (i===0&&x%10+y%10>=10)||
-   (i>0&&x%10+y%10<10)
-  );
+  }while((i===0&&x%10+y%10>=10)||(i>0&&x%10+y%10<10));
 
-  a.push({
-   op:'+',
-   kind:'Suma',
-   digits:2,
-   x,y,
-   answer:x+y,
-   cat:'Suma_2_digits'
-  });
+  a.push({op:'+',kind:'Suma',digits:2,x,y,answer:x+y,cat:'Suma_2_digits'});
  }
 
  // Sumes de tres dígits.
@@ -407,19 +397,9 @@ function makeMental(){
   do{
    x=rand(112+i*90,390+i*100);
    y=rand(101+i*70,350+i*110);
-  }while(
-   (i===0&&x%10+y%10>=10)||
-   (i>0&&x%10+y%10<10)
-  );
+  }while((i===0&&x%10+y%10>=10)||(i>0&&x%10+y%10<10));
 
-  a.push({
-   op:'+',
-   kind:'Suma',
-   digits:3,
-   x,y,
-   answer:x+y,
-   cat:'Suma_3_digits'
-  });
+  a.push({op:'+',kind:'Suma',digits:3,x,y,answer:x+y,cat:'Suma_3_digits'});
  }
 
  // Restes de dos dígits.
@@ -428,19 +408,9 @@ function makeMental(){
   do{
    x=rand(45+i*5,99);
    y=rand(10,Math.min(80,x-1));
-  }while(
-   (i===0&&x%10<y%10)||
-   (i>0&&x%10>=y%10)
-  );
+  }while((i===0&&x%10<y%10)||(i>0&&x%10>=y%10));
 
-  a.push({
-   op:'−',
-   kind:'Resta',
-   digits:2,
-   x,y,
-   answer:x-y,
-   cat:'Resta_2_digits'
-  });
+  a.push({op:'−',kind:'Resta',digits:2,x,y,answer:x-y,cat:'Resta_2_digits'});
  }
 
  // Restes de tres dígits.
@@ -449,19 +419,9 @@ function makeMental(){
   do{
    x=rand(350,999);
    y=rand(100,Math.min(800,x-1));
-  }while(
-   (i===0&&x%10<y%10)||
-   (i>0&&x%10>=y%10)
-  );
+  }while((i===0&&x%10<y%10)||(i>0&&x%10>=y%10));
 
-  a.push({
-   op:'−',
-   kind:'Resta',
-   digits:3,
-   x,y,
-   answer:x-y,
-   cat:'Resta_3_digits'
-  });
+  a.push({op:'−',kind:'Resta',digits:3,x,y,answer:x-y,cat:'Resta_3_digits'});
  }
 
  return a;
@@ -477,22 +437,17 @@ function startMental(){
 
 function renderMental(){
  if(mi>=20){
-  done(
-   'Càlcul mental completat',
-   `Has completat les 20 operacions. Encerts: ${data.mental.filter(x=>x.correct).length}/20.`
-  );
+  done('Càlcul mental completat',`Has completat les 20 operacions. Encerts: ${data.mental.filter(x=>x.correct).length}/20.`);
   return;
  }
 
  let t=mTrials[mi];
-
  $('mc').textContent=`${mi+1} / 20`;
  $('mp').style.width=`${mi/20*100}%`;
  $('mcat').textContent=`${t.kind.toUpperCase()} · ${t.digits} DÍGITS`;
  $('op').textContent=`${t.x} ${t.op} ${t.y} =`;
  $('manswer').value='';
  $('mnote').textContent='Respon tan ràpid i bé com puguis.';
-
  mStart=performance.now();
  $('manswer').focus();
 }
@@ -527,33 +482,15 @@ $('manswer').addEventListener('keydown',e=>{
  if(e.key==='Enter')submitMental();
 });
 
-
-/* =====================================================
-   MÒDUL 2 · ESTIMACIÓ
-   25 estímuls: 5 per interval.
-   Exposició visual: 500 mil·lisegons.
-===================================================== */
-
+/* ESTIMACIÓ: cinc rangs interns, sense mostrar-los a l'alumne. */
 function makeEstimate(){
  let a=[];
-
- [
-  [1,4,'1–4'],
-  [5,20,'5–20'],
-  [21,30,'21–30'],
-  [31,40,'31–40'],
-  [41,50,'41–50']
- ].forEach(([lo,hi,range],g)=>{
+ [[1,4],[5,20],[21,30],[31,40],[41,50]].forEach(([lo,hi],g)=>{
   for(let i=0;i<5;i++){
-   a.push({
-    actual:rand(lo,hi),
-    range,
-    group:g+1
-   });
+   a.push({actual:rand(lo,hi),group:g+1});
   }
  });
-
- return a;
+ return shuffle(a);
 }
 
 function startEstimate(){
@@ -566,10 +503,7 @@ function startEstimate(){
 
 function renderEstimate(){
  if(ei>=25){
-  done(
-   'Estimació completada',
-   'Has completat els 25 estímuls. S’han registrat la quantitat estimada, la quantitat real i el temps de resposta.'
-  );
+  done('Estimació completada','Has completat els 25 estímuls. S’han registrat la quantitat estimada, la quantitat real i el temps de resposta.');
   return;
  }
 
@@ -577,7 +511,6 @@ function renderEstimate(){
 
  $('ec').textContent=`${ei+1} / 25`;
  $('ep').style.width=`${ei/25*100}%`;
- $('ecat').textContent=`INTERVAL ${t.range}`;
  $('eanswer').value='';
  $('esubmit').disabled=true;
  $('enote').textContent='Observa l’estímul i estima quantes boletes hi havia.';
@@ -597,10 +530,7 @@ function renderEstimate(){
    x=rand(8,w-21);
    y=rand(8,h-21);
    tries++;
-  }while(
-   tries<60&&
-   points.some(p=>Math.hypot(p.x-x,p.y-y)<15)
-  );
+  }while(tries<60&&points.some(p=>Math.hypot(p.x-x,p.y-y)<15));
 
   points.push({x,y});
 
@@ -623,11 +553,7 @@ function renderEstimate(){
 function submitEstimate(){
  let raw=$('eanswer').value;
 
- if(
-  raw.trim()===''||
-  !Number.isFinite(Number(raw))||
-  Number(raw)<0
- ){
+ if(raw.trim()===''||!Number.isFinite(Number(raw))||Number(raw)<0){
   $('enote').textContent='Introdueix una quantitat vàlida.';
   return;
  }
@@ -636,13 +562,20 @@ function submitEstimate(){
 
  data.estimate.push({
   trial:ei+1,
-  range:t.range,
+  range:`Grup ${t.group}`,
   actual:t.actual,
   response:Number(raw),
   timeMs:Math.round(performance.now()-eStart)
  });
 
  ei++;
+
+ $('enextcount').textContent=`${ei+1} / 25`;
+ showScreen('estimateNext');
+}
+
+function nextEstimate(){
+ showScreen('estimate');
  renderEstimate();
 }
 
@@ -650,14 +583,7 @@ $('eanswer').addEventListener('keydown',e=>{
  if(e.key==='Enter'&&!$('esubmit').disabled)submitEstimate();
 });
 
-
-/* =====================================================
-   MÒDUL 3 · RECTA NUMÈRICA
-   10 valors, un per cada tram de desenes.
-   Línia de 0 a 100.
-   Espera inicial i entre estímuls: 2 segons.
-===================================================== */
-
+/* RECTA NUMÈRICA */
 function makeLine(){
  let a=[];
 
@@ -678,21 +604,15 @@ function startLine(){
  lTrials=makeLine();
  li=0;
  data.line=[];
-
  showScreen('line');
-
  $('ltarget').style.visibility='hidden';
  lineReady=false;
-
  setTimeout(renderLine,2000);
 }
 
 function renderLine(){
  if(li>=10){
-  done(
-   'Recta numèrica completada',
-   'Has completat els 10 estímuls. S’han registrat la resposta, l’error absolut i el temps de resposta.'
-  );
+  done('Recta numèrica completada','Has completat els 10 estímuls. S’han registrat la resposta, l’error absolut i el temps de resposta.');
   return;
  }
 
@@ -711,14 +631,7 @@ $('linehit').addEventListener('pointerdown',e=>{
  lineReady=false;
 
  let r=$('linehit').getBoundingClientRect();
-
- let guess=Math.round(
-  Math.max(
-   0,
-   Math.min(1,(e.clientX-r.left)/r.width)
-  )*100
- );
-
+ let guess=Math.round(Math.max(0,Math.min(1,(e.clientX-r.left)/r.width))*100);
  let target=lTrials[li];
 
  data.line.push({
@@ -730,19 +643,12 @@ $('linehit').addEventListener('pointerdown',e=>{
  });
 
  $('ltarget').style.visibility='hidden';
-
  li++;
 
  setTimeout(renderLine,2000);
 });
 
-
-/* =====================================================
-   EXPORTACIÓ CSV
-   Una fila per estímul.
-   Dades personals i resum del càlcul mental.
-===================================================== */
-
+/* EXPORTACIÓ CSV */
 function cell(v){
  return '"'+String(v??'').replace(/"/g,'""')+'"';
 }
@@ -753,13 +659,7 @@ function downloadCSV(){
   return;
  }
 
- let groups=[
-  'Suma_2_digits',
-  'Suma_3_digits',
-  'Resta_2_digits',
-  'Resta_3_digits'
- ];
-
+ let groups=['Suma_2_digits','Suma_3_digits','Resta_2_digits','Resta_3_digits'];
  let sum={};
 
  groups.forEach(g=>{
@@ -768,53 +668,45 @@ function downloadCSV(){
 
   sum[g]={
    hits:c.length,
-   mean:c.length
-    ?Math.round(c.reduce((n,x)=>n+x.timeMs,0)/c.length)
-    :''
+   mean:c.length?Math.round(c.reduce((n,x)=>n+x.timeMs,0)/c.length):''
   };
  });
 
  let rows=[];
 
- data.mental.forEach(x=>{
-  rows.push({
-   Modul:'CalculMental',
-   Intent:x.trial,
-   Categoria:x.category,
-   Operacio:x.operation,
-   Resposta:x.response,
-   RespostaCorrecta:x.correctAnswer,
-   Encert:x.correct?'Sí':'No',
-   TempsResposta_ms:x.timeMs,
-   EncertsCategoria:sum[x.category].hits,
-   TempsMitjaEncertsCategoria_ms:sum[x.category].mean
-  });
- });
+ data.mental.forEach(x=>rows.push({
+  Modul:'CalculMental',
+  Intent:x.trial,
+  Categoria:x.category,
+  Operacio:x.operation,
+  Resposta:x.response,
+  RespostaCorrecta:x.correctAnswer,
+  Encert:x.correct?'Sí':'No',
+  TempsResposta_ms:x.timeMs,
+  EncertsCategoria:sum[x.category].hits,
+  TempsMitjaEncertsCategoria_ms:sum[x.category].mean
+ }));
 
- data.estimate.forEach(x=>{
-  rows.push({
-   Modul:'Estimacio',
-   Intent:x.trial,
-   Categoria:x.range,
-   NombreReal:x.actual,
-   NombreEstimat:x.response,
-   ErrorAbsolut:Math.abs(x.actual-x.response),
-   TempsResposta_ms:x.timeMs
-  });
- });
+ data.estimate.forEach(x=>rows.push({
+  Modul:'Estimacio',
+  Intent:x.trial,
+  Categoria:x.range,
+  NombreReal:x.actual,
+  NombreEstimat:x.response,
+  ErrorAbsolut:Math.abs(x.actual-x.response),
+  TempsResposta_ms:x.timeMs
+ }));
 
- data.line.forEach(x=>{
-  rows.push({
-   Modul:'RectaNumerica',
-   Intent:x.trial,
-   NombreReal:x.target,
-   NombreEstimat:x.response,
-   RespostaCorrecta:x.target,
-   Resposta:x.response,
-   ErrorAbsolut:x.error,
-   TempsResposta_ms:x.timeMs
-  });
- });
+ data.line.forEach(x=>rows.push({
+  Modul:'RectaNumerica',
+  Intent:x.trial,
+  NombreReal:x.target,
+  NombreEstimat:x.response,
+  RespostaCorrecta:x.target,
+  Resposta:x.response,
+  ErrorAbsolut:x.error,
+  TempsResposta_ms:x.timeMs
+ }));
 
  if(!rows.length){
   alert('Encara no hi ha resultats per exportar.');
@@ -830,20 +722,14 @@ function downloadCSV(){
 
  rows=rows.map(r=>({...common,...r}));
 
- let headers=[
-  ...new Set(rows.flatMap(r=>Object.keys(r)))
- ];
+ let headers=[...new Set(rows.flatMap(r=>Object.keys(r)))];
 
  let csv=[
   headers.map(cell).join(';'),
   ...rows.map(r=>headers.map(h=>cell(r[h])).join(';'))
  ].join('\r\n');
 
- let blob=new Blob(
-  ['\ufeff'+csv],
-  {type:'text/csv;charset=utf-8;'}
- );
-
+ let blob=new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8;'});
  let url=URL.createObjectURL(blob);
  let a=document.createElement('a');
 
@@ -857,22 +743,13 @@ function downloadCSV(){
  URL.revokeObjectURL(url);
 }
 
-
-/* =====================================================
-   REINICIAR SESSIÓ
-===================================================== */
-
 function resetAll(){
- if(!confirm('Vols esborrar les dades i els resultats d’aquesta sessió?')){
-  return;
- }
+ if(!confirm('Vols esborrar les dades i els resultats d’aquesta sessió?'))return;
 
  Object.keys(data).forEach(k=>data[k]=[]);
  Object.keys(profile).forEach(k=>profile[k]='');
 
- document.querySelectorAll('.choice').forEach(x=>{
-  x.classList.remove('selected');
- });
+ document.querySelectorAll('.choice').forEach(x=>x.classList.remove('selected'));
 
  $('birth').value='';
  $('education').value='';
@@ -881,7 +758,7 @@ function resetAll(){
  updateStatus();
  showScreen('home');
 }
-
 </script>
+
 </body>
 </html>
