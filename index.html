@@ -43,16 +43,20 @@ input,select{width:100%;padding:13px;border:2px solid #e8edf3;border-radius:10px
 .pill{display:inline-block;background:#eaf2ff;color:var(--navy);border-radius:30px;padding:5px 10px;font-size:11px;font-weight:800}
 .stage{min-height:210px;display:flex;align-items:center;justify-content:center;text-align:center}
 .operation{font-size:clamp(36px,7vw,64px);font-weight:850;color:#0f172a;white-space:nowrap}
+.instructions{max-width:680px;margin:22px auto;padding:24px;background:#f8fafc;border:1px solid var(--line);border-radius:14px;text-align:center}
+.instructions p{font-size:clamp(16px,2.2vw,20px);line-height:1.6;color:var(--ink)}
+.test-actions{max-width:380px;margin:18px auto 0}
+.test-actions .btn{width:100%}
 .answer{max-width:330px;margin:auto}
 .answer input{text-align:center;font-size:24px;font-weight:800}
 .note{text-align:center;font-size:13px}
 .numberline{width:86%;max-width:760px;margin:20px auto}
 .labels{display:flex;justify-content:space-between;color:#94a3b8;font-size:24px;font-weight:900;margin-bottom:-14px}
-.linehit{height:125px;display:flex;align-items:center;position:relative;touch-action:pan-y;cursor:crosshair}
+.linehit{height:125px;display:flex;align-items:center;position:relative;touch-action:pan-y;cursor:crosshair;user-select:none;-webkit-user-select:none}
 .bar{height:5px;width:100%;background:#334155;border-radius:5px}
 .tick{position:absolute;height:34px;width:2px;background:#334155;top:calc(50% - 17px)}
 .target{font-size:clamp(58px,10vw,90px);font-weight:900;margin:0}
-.dots{width:100%;height:245px;position:relative;overflow:hidden;border:1px solid #eef2f7;border-radius:13px;background:#f8fafc}
+.dots{width:100%;height:245px;min-height:220px;position:relative;overflow:hidden;border:1px solid #eef2f7;border-radius:13px;background:#f8fafc}
 .dot{position:absolute;width:13px;height:13px;background:#2563eb;border-radius:50%}
 .dots.hidden .dot{display:none}
 .history-item{border:1px solid var(--line);border-radius:12px;padding:15px;margin:10px 0;background:#fff}
@@ -75,8 +79,8 @@ footer{text-align:center;color:#94a3b8;font-size:12px;padding:20px}
 }
 </style>
 </head>
-<body>
 
+<body>
 <header>
  <div class="head">
   <div class="brand">NEUREKALAB · AVALUACIÓ</div>
@@ -109,10 +113,26 @@ footer{text-align:center;color:#94a3b8;font-size:12px;padding:20px}
  </div>
 
  <div class="grid">
-  <div class="module"><div class="symbol">👤</div><h3>Dades personals</h3><p>Identificació i característiques de la sessió.</p></div>
-  <div class="module"><div class="symbol">➕</div><h3>Càlcul mental</h3><p>20 sumes i restes de dos i tres dígits.</p></div>
-  <div class="module"><div class="symbol">🔵</div><h3>Estimació</h3><p>25 estímuls de boletes blaves, exposats 500 ms.</p></div>
-  <div class="module"><div class="symbol">〰️</div><h3>Recta numèrica</h3><p>10 nombres per situar entre 0 i 100.</p></div>
+  <div class="module">
+   <div class="symbol">👤</div>
+   <h3>Dades personals</h3>
+   <p>Identificació i característiques de la sessió.</p>
+  </div>
+  <div class="module">
+   <div class="symbol">➕</div>
+   <h3>Càlcul mental</h3>
+   <p>20 sumes i restes de dos i tres dígits.</p>
+  </div>
+  <div class="module">
+   <div class="symbol">🔵</div>
+   <h3>Estimació</h3>
+   <p>25 estímuls de boletes blaves, exposats 500 ms.</p>
+  </div>
+  <div class="module">
+   <div class="symbol">〰️</div>
+   <h3>Recta numèrica</h3>
+   <p>10 nombres per situar entre 0 i 100.</p>
+  </div>
  </div>
 </section>
 
@@ -120,12 +140,10 @@ footer{text-align:center;color:#94a3b8;font-size:12px;padding:20px}
  <div class="card">
   <h2 id="profile-title">Nou usuari</h2>
   <p class="intro">Les dades quedaran desades per poder recuperar l’alumne en futures sessions.</p>
-
   <div class="field">
    <label>Nom i cognoms / codi d’usuari</label>
    <input id="user-name" type="text" autocomplete="off" placeholder="Identificador de l’alumne">
   </div>
-
   <div class="field">
    <label>Sexe</label>
    <div class="choices">
@@ -133,7 +151,6 @@ footer{text-align:center;color:#94a3b8;font-size:12px;padding:20px}
     <button class="choice" data-sex="Femení" onclick="pick(this,'sex')">Femení</button>
    </div>
   </div>
-
   <div class="two">
    <div class="field">
     <label>Data de naixement</label>
@@ -157,7 +174,6 @@ footer{text-align:center;color:#94a3b8;font-size:12px;padding:20px}
     </select>
    </div>
   </div>
-
   <div class="field">
    <label>Dispositiu</label>
    <div class="choices">
@@ -166,7 +182,6 @@ footer{text-align:center;color:#94a3b8;font-size:12px;padding:20px}
     <button class="choice" onclick="pick(this,'device')">💻 PC</button>
    </div>
   </div>
-
   <button class="btn" onclick="saveProfile()">Desar dades i continuar</button>
   <p id="profile-error" class="note"></p>
  </div>
@@ -210,7 +225,7 @@ footer{text-align:center;color:#94a3b8;font-size:12px;padding:20px}
 
  <div class="card" style="margin-top:16px">
   <h3>Resultats</h3>
-  <p class="note">Exporta els resultats de l'alumne o crea una còpia de seguretat de tots els usuaris.</p>
+  <p class="note">Exporta un CSV amb una fila per estímul, les dades personals i els indicadors resumits del càlcul mental.</p>
   <div class="btnrow">
    <button class="btn" onclick="downloadAllCSV()">Descarregar tots els resultats (CSV)</button>
    <button class="btn secondary" onclick="backupUsers()">Còpia de seguretat</button>
@@ -218,9 +233,29 @@ footer{text-align:center;color:#94a3b8;font-size:12px;padding:20px}
  </div>
 </section>
 
+<section id="mentalIntro" class="screen">
+ <div class="card">
+  <div class="topline">
+   <span>CÀLCUL MENTAL</span>
+   <span>INSTRUCCIONS</span>
+  </div>
+  <div class="instructions">
+   <h2>Abans de començar</h2>
+   <p>Ara veuràs un conjunt de sumes i restes. Resol-les tan ràpid com puguis.</p>
+   <p><strong>Endavant!</strong></p>
+  </div>
+  <div class="test-actions">
+   <button class="btn" onclick="beginMental()">COMENÇAR</button>
+  </div>
+ </div>
+</section>
+
 <section id="mental" class="screen">
  <div class="card">
-  <div class="topline"><span>CÀLCUL MENTAL</span><span id="mc">1 / 20</span></div>
+  <div class="topline">
+   <span>CÀLCUL MENTAL</span>
+   <span id="mc">1 / 20</span>
+  </div>
   <div class="progress"><div id="mp"></div></div>
   <div class="center"><span class="pill" id="mcat">SUMA · 2 DÍGITS</span></div>
   <div class="stage"><div class="operation" id="op">24 + 13 =</div></div>
@@ -241,7 +276,7 @@ footer{text-align:center;color:#94a3b8;font-size:12px;padding:20px}
    <p class="intro">Ara veuràs breument un conjunt de punts blaus. Fes una estimació de quants en veus.</p>
   </div>
   <div class="answer">
-   <button class="btn" style="width:100%" onclick="beginEstimate()">COMENÇAR</button>
+   <button class="btn" id="estartbutton" style="width:100%" onclick="beginEstimate()">COMENÇAR</button>
   </div>
  </div>
 </section>
@@ -250,6 +285,7 @@ footer{text-align:center;color:#94a3b8;font-size:12px;padding:20px}
  <div class="card">
   <div class="topline"><span>ESTIMACIÓ</span><span id="ec">1 / 25</span></div>
   <div class="progress"><div id="ep"></div></div>
+  <div class="center"><span class="pill" id="ecat" style="display:none"></span></div>
   <div class="stage"><div id="dots" class="dots"></div></div>
   <div class="answer">
    <label for="eanswer">Quantes boletes has vist?</label>
@@ -268,7 +304,7 @@ footer{text-align:center;color:#94a3b8;font-size:12px;padding:20px}
    <p class="note">Prem el botó quan estiguis preparat/da per veure el següent estímul.</p>
   </div>
   <div class="answer">
-   <button class="btn" style="width:100%" onclick="nextEstimate()">SEGÜENT</button>
+   <button class="btn" id="enextbutton" style="width:100%" onclick="nextEstimate()">SEGÜENT</button>
   </div>
  </div>
 </section>
@@ -293,35 +329,36 @@ footer{text-align:center;color:#94a3b8;font-size:12px;padding:20px}
  </div>
 </section>
 
-<section id="done" class="screen">
- <div class="card">
-  <h2 id="done-title">Mòdul completat</h2>
-  <p id="done-message" class="intro"></p>
-  <button class="btn" onclick="toHub()">Tornar al panell</button>
-  <button class="btn secondary" style="margin-left:7px" onclick="showHistory()">Veure historial</button>
- </div>
-</section>
-
 <section id="history" class="screen">
  <div class="card">
   <h2>Historial de proves</h2>
   <p id="history-user" class="intro"></p>
   <div id="history-list"></div>
   <div class="btnrow">
-   <button class="btn secondary" onclick="showScreen('hub')">Tornar al panell</button>
+   <button class="btn secondary" onclick="toHub()">Tornar al panell</button>
+   <button class="btn" onclick="downloadAllCSV()">Exportar tots els resultats CSV</button>
   </div>
  </div>
 </section>
 
 <section id="historyDetail" class="screen">
  <div class="card">
-  <h2 id="detail-title">Resultats</h2>
+  <h2 id="detail-title">Resultats de la prova</h2>
   <p id="detail-meta" class="intro"></p>
   <div id="detail-content" class="table-wrap"></div>
   <div class="btnrow">
-   <button class="btn" onclick="exportSelectedRun()">Descarregar CSV d'aquesta prova</button>
-   <button class="btn secondary" onclick="showHistory()">Tornar a l'historial</button>
+   <button class="btn" id="detail-export" onclick="exportSelectedRun()">Descarregar aquesta prova (CSV)</button>
+   <button class="btn secondary" onclick="showHistory()">Tornar a l’historial</button>
   </div>
+ </div>
+</section>
+
+<section id="done" class="screen">
+ <div class="card">
+  <h2 id="done-title">Mòdul completat</h2>
+  <p id="done-message" class="intro"></p>
+  <button class="btn" onclick="toHub()">Tornar al panell ara</button>
+  <button class="btn secondary" style="margin-left:7px" onclick="downloadAllCSV()">Descarregar resultats CSV</button>
  </div>
 </section>
 
@@ -329,94 +366,30 @@ footer{text-align:center;color:#94a3b8;font-size:12px;padding:20px}
 <footer>NUMBER15 · NeurekaLAB</footer>
 
 <script>
-const STORAGE_KEY='NUMBER15_USERS_V3';
+const profile={name:'',sex:'',birth:'',education:'',device:''};
+const data={mental:[],estimate:[],line:[]};
+const STORAGE_KEY='number15_users_v3';
+
 let users=[];
 let currentUserId=null;
 let editingUserId=null;
-let selectedRunId=null;
 let activeRun=null;
-
-const profile={name:'',sex:'',birth:'',education:'',device:''};
-const data={mental:[],estimate:[],line:[]};
+let selectedRunId=null;
 
 let mTrials=[],mi=0,mStart=0;
 let eTrials=[],ei=0,eStart=0;
 let lTrials=[],li=0,lStart=0,lineReady=false;
+let doneTimer=null;
 
 const $=id=>document.getElementById(id);
 const rand=(a,b)=>Math.floor(Math.random()*(b-a+1))+a;
 
 function showScreen(id){
+ const target=$(id);
+ if(!target){console.error('Pantalla no trobada:',id);return}
  document.querySelectorAll('.screen').forEach(x=>x.classList.remove('active'));
- $(id).classList.add('active');
- window.scrollTo(0,0);
-}
-
-function persistUsers(){
- try{
-  localStorage.setItem(STORAGE_KEY,JSON.stringify(users));
- }catch(e){
-  alert('No s’han pogut desar les dades. Pot ser que l’espai del navegador estigui ple.');
- }
-}
-
-function loadUsers(){
- try{
-  users=JSON.parse(localStorage.getItem(STORAGE_KEY)||'[]');
-  if(!Array.isArray(users))users=[];
- }catch(e){users=[]}
- renderUserSelect();
-}
-
-function renderUserSelect(){
- const select=$('user-select');
- select.innerHTML='<option value="">Selecciona un usuari...</option>';
- users.slice().sort((a,b)=>(a.profile.name||'').localeCompare(b.profile.name||'')).forEach(u=>{
-  const op=document.createElement('option');
-  op.value=u.id;
-  op.textContent=u.profile.name;
-  select.appendChild(op);
- });
-}
-
-function newUser(){
- editingUserId=null;
- Object.keys(profile).forEach(k=>profile[k]='');
- fillProfileForm();
- $('profile-title').textContent='Crear nou usuari';
- $('profile-error').textContent='';
- showScreen('profile');
-}
-
-function loadSelectedUser(){
- const id=$('user-select').value;
- if(!id){$('home-note').textContent='Selecciona un usuari de la llista.';return}
- const u=users.find(x=>x.id===id);
- if(!u)return;
- currentUserId=id;
- Object.assign(profile,u.profile);
- data.mental=[];data.estimate=[];data.line=[];
- renderProfileSummary();
- updateStatus();
- showScreen('hub');
-}
-
-function switchUser(){
- currentUserId=null;
- activeRun=null;
- renderUserSelect();
- showScreen('home');
-}
-
-function fillProfileForm(){
- $('user-name').value=profile.name||'';
- $('birth').value=profile.birth||'';
- $('education').value=profile.education||'';
- document.querySelectorAll('.choice').forEach(b=>{
-  const type=b.dataset.sex?'sex':'device';
-  const value=type==='sex'?b.dataset.sex:b.textContent.replace(/[📱📟💻]/g,'').trim();
-  b.classList.toggle('selected',profile[type]===value);
- });
+ target.classList.add('active');
+ window.scrollTo({top:0,behavior:'auto'});
 }
 
 function pick(el,type){
@@ -426,15 +399,62 @@ function pick(el,type){
  else profile.device=el.textContent.replace(/[📱📟💻]/g,'').trim();
 }
 
+function persistUsers(){
+ try{
+  localStorage.setItem(STORAGE_KEY,JSON.stringify(users));
+ }catch(e){
+  alert('No s’han pogut desar les dades. Pot ser que l’emmagatzematge del navegador estigui ple o bloquejat.');
+ }
+}
+
+function loadUsers(){
+ try{
+  const parsed=JSON.parse(localStorage.getItem(STORAGE_KEY)||'[]');
+  users=Array.isArray(parsed)?parsed:[];
+ }catch(e){users=[]}
+ renderUserSelect();
+}
+
+function renderUserSelect(){
+ const sel=$('user-select');
+ if(!sel)return;
+ const keep=sel.value;
+ sel.innerHTML='<option value="">Selecciona un usuari...</option>'+users.slice().sort((a,b)=>(a.profile?.name||'').localeCompare(b.profile?.name||'')).map(u=>`<option value="${escapeHtml(u.id)}">${escapeHtml(u.profile?.name||'Usuari')} · ${escapeHtml(u.profile?.birth||'')}</option>`).join('');
+ if(users.some(u=>u.id===keep))sel.value=keep;
+}
+
+function escapeHtml(v){
+ return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+function newUser(){
+ editingUserId=null;
+ Object.assign(profile,{name:'',sex:'',birth:'',education:'',device:''});
+ fillProfileForm();
+ $('profile-title').textContent='Crear usuari';
+ $('profile-error').textContent='';
+ showScreen('profile');
+}
+
 function editCurrentUser(){
- const u=users.find(x=>x.id===currentUserId);
- if(!u)return;
- editingUserId=u.id;
- Object.assign(profile,u.profile);
+ editingUserId=currentUserId;
  fillProfileForm();
  $('profile-title').textContent='Editar usuari';
  $('profile-error').textContent='';
  showScreen('profile');
+}
+
+function fillProfileForm(){
+ $('user-name').value=profile.name||'';
+ $('birth').value=profile.birth||'';
+ $('education').value=profile.education||'';
+ document.querySelectorAll('.choice').forEach(x=>x.classList.remove('selected'));
+ document.querySelectorAll('[data-sex]').forEach(x=>{
+  if(x.dataset.sex===profile.sex)x.classList.add('selected');
+ });
+ document.querySelectorAll('.choices button:not([data-sex])').forEach(x=>{
+  if(x.textContent.replace(/[📱📟💻]/g,'').trim()===profile.device)x.classList.add('selected');
+ });
 }
 
 function saveProfile(){
@@ -452,31 +472,50 @@ function saveProfile(){
   return;
  }
 
- if(editingUserId){
-  const u=users.find(x=>x.id===editingUserId);
-  if(!u)return;
-  const duplicate=users.find(x=>x.id!==editingUserId&&x.profile.name.toLowerCase()===profile.name.toLowerCase());
-  if(duplicate){
-   $('profile-error').textContent='Ja existeix un usuari amb aquest nom o codi.';
-   return;
-  }
+ let u=editingUserId?users.find(x=>x.id===editingUserId):null;
+
+ if(u){
   u.profile={...profile};
   currentUserId=u.id;
  }else{
-  if(users.some(x=>x.profile.name.toLowerCase()===profile.name.toLowerCase())){
-   $('profile-error').textContent='Aquest usuari ja existeix. Selecciona’l des de la pantalla inicial.';
-   return;
-  }
-  const u={id:crypto.randomUUID?crypto.randomUUID():String(Date.now()),profile:{...profile},sessions:[]};
+  const id='u_'+Date.now().toString(36)+'_'+Math.random().toString(36).slice(2,7);
+  u={id,profile:{...profile},sessions:[]};
   users.push(u);
-  currentUserId=u.id;
+  currentUserId=id;
  }
 
  persistUsers();
  renderUserSelect();
  renderProfileSummary();
  updateStatus();
+ $('profile-error').textContent='';
  showScreen('hub');
+}
+
+function loadSelectedUser(){
+ const id=$('user-select').value;
+ if(!id){
+  $('home-note').textContent='Selecciona un usuari o crea’n un de nou.';
+  return;
+ }
+ const u=users.find(x=>x.id===id);
+ if(!u)return;
+ currentUserId=id;
+ Object.assign(profile,u.profile);
+ data.mental=[];
+ data.estimate=[];
+ data.line=[];
+ activeRun=null;
+ renderProfileSummary();
+ updateStatus();
+ showScreen('hub');
+}
+
+function switchUser(){
+ currentUserId=null;
+ activeRun=null;
+ showScreen('home');
+ renderUserSelect();
 }
 
 function renderProfileSummary(){
@@ -485,93 +524,149 @@ function renderProfileSummary(){
  $('profile-summary').textContent=`Usuari: ${u.profile.name} · Sexe: ${u.profile.sex} · Naixement: ${u.profile.birth} · Estudis: ${u.profile.education} · Dispositiu: ${u.profile.device}`;
 }
 
+function toHub(){
+ if(doneTimer){clearTimeout(doneTimer);doneTimer=null}
+ renderProfileSummary();
+ updateStatus();
+ showScreen('hub');
+}
+
 function updateStatus(){
  const u=users.find(x=>x.id===currentUserId);
  const sessions=u?.sessions||[];
- ['mental','estimate','line'].forEach((m,i)=>{
-  const n=sessions.filter(s=>s.module===m&&s.status==='completed').length;
-  const el=$([ 'ms','es','ls' ][i]);
-  el.textContent=n?`${n} prova/es completada/es`:'Encara no hi ha proves';
- });
+ const latest=m=>sessions.filter(x=>x.module===m).slice(-1)[0];
+ $('ms').textContent=latest('mental')?`Última prova: ${latest('mental').status==='completed'?'Completada':'Incompleta'}`:'Cap prova desada';
+ $('es').textContent=latest('estimate')?`Última prova: ${latest('estimate').status==='completed'?'Completada':'Incompleta'}`:'Cap prova desada';
+ $('ls').textContent=latest('line')?`Última prova: ${latest('line').status==='completed'?'Completada':'Incompleta'}`:'Cap prova desada';
 }
 
 function startRun(module){
  const u=users.find(x=>x.id===currentUserId);
- if(!u){alert('Carrega un usuari abans de començar.');showScreen('home');return}
- activeRun={id:crypto.randomUUID?crypto.randomUUID():String(Date.now()),module,startedAt:new Date().toISOString(),completedAt:null,status:'in_progress',results:[]};
+ if(!u){
+  alert('Carrega el perfil d’un usuari abans de començar.');
+  showScreen('home');
+  return;
+ }
+ activeRun={
+  id:'r_'+Date.now().toString(36)+'_'+Math.random().toString(36).slice(2,6),
+  module,
+  startedAt:new Date().toISOString(),
+  completedAt:null,
+  status:'in_progress',
+  results:[]
+ };
+ u.sessions=u.sessions||[];
  u.sessions.push(activeRun);
  persistUsers();
 }
 
 function saveRunProgress(module){
  if(!activeRun||activeRun.module!==module)return;
- activeRun.results=data[module].slice();
+ activeRun.results=JSON.parse(JSON.stringify(data[module]));
  const u=users.find(x=>x.id===currentUserId);
  if(u){
-  const i=u.sessions.findIndex(s=>s.id===activeRun.id);
+  const i=u.sessions.findIndex(x=>x.id===activeRun.id);
   if(i>=0)u.sessions[i]=activeRun;
   persistUsers();
  }
 }
 
-function completeRun(module){
- if(!activeRun||activeRun.module!==module)return;
- activeRun.results=data[module].slice();
+function finishRun(){
+ if(!activeRun)return;
  activeRun.status='completed';
  activeRun.completedAt=new Date().toISOString();
- const u=users.find(x=>x.id===currentUserId);
- if(u){
-  const i=u.sessions.findIndex(s=>s.id===activeRun.id);
-  if(i>=0)u.sessions[i]=activeRun;
-  persistUsers();
- }
+ saveRunProgress(activeRun.module);
  activeRun=null;
- updateStatus();
 }
 
-/* CÀLCUL MENTAL */
-function makeMental(){
- let a=[];
- for(let i=0;i<5;i++){
-  let x,y;
-  do{x=rand(12+i*7,39+i*10);y=rand(11+i*8,35+i*12)}
-  while((i===0&&x%10+y%10>=10)||(i>0&&x%10+y%10<10));
-  a.push({op:'+',kind:'Suma',digits:2,x,y,answer:x+y,cat:'Suma_2_digits'});
- }
- for(let i=0;i<5;i++){
-  let x,y;
-  do{x=rand(112+i*90,390+i*100);y=rand(101+i*70,350+i*110)}
-  while((i===0&&x%10+y%10>=10)||(i>0&&x%10+y%10<10));
-  a.push({op:'+',kind:'Suma',digits:3,x,y,answer:x+y,cat:'Suma_3_digits'});
- }
- for(let i=0;i<5;i++){
-  let x,y;
-  do{x=rand(45+i*5,99);y=rand(10,Math.min(80,x-1))}
-  while((i===0&&x%10<y%10)||(i>0&&x%10>=y%10));
-  a.push({op:'−',kind:'Resta',digits:2,x,y,answer:x-y,cat:'Resta_2_digits'});
- }
- for(let i=0;i<5;i++){
-  let x,y;
-  do{x=rand(350,999);y=rand(100,Math.min(800,x-1))}
-  while((i===0&&x%10<y%10)||(i>0&&x%10>=y%10));
-  a.push({op:'−',kind:'Resta',digits:3,x,y,answer:x-y,cat:'Resta_3_digits'});
+function done(title,msg){
+ if(doneTimer)clearTimeout(doneTimer);
+ finishRun();
+ $('done-title').textContent=title;
+ $('done-message').textContent=msg+' En uns segons tornaràs al panell principal.';
+ updateStatus();
+ showScreen('done');
+ doneTimer=setTimeout(()=>{
+  doneTimer=null;
+  toHub();
+ },5000);
+}
+
+function shuffle(a){
+ for(let i=a.length-1;i>0;i--){
+  let j=rand(0,i);
+  [a[i],a[j]]=[a[j],a[i]];
  }
  return a;
 }
 
+/* CÀLCUL MENTAL */
+
+function makeMental(){
+ let a=[];
+
+ // Sumes de dos dígits.
+ for(let i=0;i<5;i++){
+  let x,y;
+  do{
+   x=rand(12+i*7,39+i*10);
+   y=rand(11+i*8,35+i*12);
+  }while((i===0&&x%10+y%10>=10)||(i>0&&x%10+y%10<10));
+  a.push({op:'+',kind:'Suma',digits:2,x,y,answer:x+y,cat:'Suma_2_digits'});
+ }
+
+ // Sumes de tres dígits.
+ for(let i=0;i<5;i++){
+  let x,y;
+  do{
+   x=rand(112+i*90,390+i*100);
+   y=rand(101+i*70,350+i*110);
+  }while((i===0&&x%10+y%10>=10)||(i>0&&x%10+y%10<10));
+  a.push({op:'+',kind:'Suma',digits:3,x,y,answer:x+y,cat:'Suma_3_digits'});
+ }
+
+ // Restes de dos dígits.
+ for(let i=0;i<5;i++){
+  let x,y;
+  do{
+   x=rand(45+i*5,99);
+   y=rand(10,Math.min(80,x-1));
+  }while((i===0&&x%10<y%10)||(i>0&&x%10>=y%10));
+  a.push({op:'−',kind:'Resta',digits:2,x,y,answer:x-y,cat:'Resta_2_digits'});
+ }
+
+ // Restes de tres dígits.
+ for(let i=0;i<5;i++){
+  let x,y;
+  do{
+   x=rand(350,999);
+   y=rand(100,Math.min(800,x-1));
+  }while((i===0&&x%10<y%10)||(i>0&&x%10>=y%10));
+  a.push({op:'−',kind:'Resta',digits:3,x,y,answer:x-y,cat:'Resta_3_digits'});
+ }
+
+ return a;
+}
+
 function startMental(){
- mTrials=makeMental();mi=0;data.mental=[];
+ mTrials=makeMental();
+ mi=0;
+ data.mental=[];
  startRun('mental');
+ showScreen('mentalIntro');
+}
+
+function beginMental(){
  showScreen('mental');
  renderMental();
 }
 
 function renderMental(){
  if(mi>=20){
-  completeRun('mental');
   done('Càlcul mental completat',`Has completat les 20 operacions. Encerts: ${data.mental.filter(x=>x.correct).length}/20.`);
   return;
  }
+
  let t=mTrials[mi];
  $('mc').textContent=`${mi+1} / 20`;
  $('mp').style.width=`${mi/20*100}%`;
@@ -584,17 +679,38 @@ function renderMental(){
 }
 
 function submitMental(){
+ if(mi>=20)return;
  let raw=$('manswer').value;
- if(raw.trim()===''){$('mnote').textContent='Escriu una resposta abans de continuar.';return}
- let t=mTrials[mi],response=Number(raw),time=Math.round(performance.now()-mStart);
- data.mental.push({trial:mi+1,category:t.cat,operation:`${t.x} ${t.op} ${t.y}`,response,correctAnswer:t.answer,correct:response===t.answer,timeMs:time});
+ if(raw.trim()===''){
+  $('mnote').textContent='Escriu una resposta abans de continuar.';
+  return;
+ }
+
+ let t=mTrials[mi];
+ let response=Number(raw);
+ let time=Math.round(performance.now()-mStart);
+
+ data.mental.push({
+  trial:mi+1,
+  category:t.cat,
+  operation:`${t.x} ${t.op} ${t.y}`,
+  response,
+  correctAnswer:t.answer,
+  correct:response===t.answer,
+  timeMs:time
+ });
+
  saveRunProgress('mental');
  mi++;
  renderMental();
 }
-$('manswer').addEventListener('keydown',e=>{if(e.key==='Enter')submitMental()});
 
-/* ESTIMACIÓ */
+$('manswer').addEventListener('keydown',e=>{
+ if(e.key==='Enter')submitMental();
+});
+
+/* ESTIMACIÓ: 25 estímuls en cinc rangs interns. */
+
 function makeEstimate(){
  let a=[];
  [[1,4],[5,20],[21,30],[31,40],[41,50]].forEach(([lo,hi],g)=>{
@@ -604,7 +720,9 @@ function makeEstimate(){
 }
 
 function startEstimate(){
- eTrials=makeEstimate();ei=0;data.estimate=[];
+ eTrials=makeEstimate();
+ ei=0;
+ data.estimate=[];
  startRun('estimate');
  showScreen('estimateIntro');
 }
@@ -616,57 +734,102 @@ function beginEstimate(){
 
 function renderEstimate(){
  if(ei>=25){
-  completeRun('estimate');
   done('Estimació completada','Has completat els 25 estímuls. S’han registrat la quantitat estimada, la quantitat real i el temps de resposta.');
   return;
  }
- let t=eTrials[ei];
+
+ const t=eTrials[ei];
  $('ec').textContent=`${ei+1} / 25`;
  $('ep').style.width=`${ei/25*100}%`;
  $('eanswer').value='';
  $('esubmit').disabled=true;
  $('enote').textContent='Observa l’estímul i estima quantes boletes hi havia.';
- let box=$('dots');box.innerHTML='';box.classList.remove('hidden');
- let w=box.clientWidth||500,h=box.clientHeight||245,points=[];
- for(let i=0;i<t.actual;i++){
-  let x,y,tries=0;
-  do{x=rand(8,w-21);y=rand(8,h-21);tries++}
-  while(tries<60&&points.some(p=>Math.hypot(p.x-x,p.y-y)<15));
-  points.push({x,y});
-  let d=document.createElement('i');d.className='dot';d.style.left=x+'px';d.style.top=y+'px';box.appendChild(d);
- }
- setTimeout(()=>{
-  box.classList.add('hidden');
-  eStart=performance.now();
-  $('esubmit').disabled=false;
-  $('enote').textContent='Escriu quantes boletes creus que has vist.';
-  $('eanswer').focus();
- },500);
+
+ const box=$('dots');
+ box.innerHTML='';
+ box.classList.remove('hidden');
+
+ // Espera que el navegador hagi pintat la pantalla per mesurar l'àrea.
+ requestAnimationFrame(()=>{
+  const w=Math.max(100,box.clientWidth);
+  const h=Math.max(150,box.clientHeight);
+  const points=[];
+
+  for(let i=0;i<t.actual;i++){
+   let x,y,tries=0;
+   do{
+    x=rand(8,Math.max(9,w-21));
+    y=rand(8,Math.max(9,h-21));
+    tries++;
+   }while(tries<100&&points.some(p=>Math.hypot(p.x-x,p.y-y)<14));
+
+   points.push({x,y});
+   const d=document.createElement('i');
+   d.className='dot';
+   d.style.left=`${x}px`;
+   d.style.top=`${y}px`;
+   box.appendChild(d);
+  }
+
+  // Els punts es mantenen visibles exactament 500 ms.
+  setTimeout(()=>{
+   box.classList.add('hidden');
+   eStart=performance.now();
+   $('esubmit').disabled=false;
+   $('enote').textContent='Escriu quantes boletes creus que has vist.';
+   $('eanswer').focus();
+  },500);
+ });
 }
 
 function submitEstimate(){
+ if($('esubmit').disabled)return;
+ $('esubmit').disabled=true;
+
  let raw=$('eanswer').value;
- if(raw.trim()===''||!Number.isFinite(Number(raw))||Number(raw)<0){$('enote').textContent='Introdueix una quantitat vàlida.';return}
+ if(raw.trim()===''||!Number.isFinite(Number(raw))||Number(raw)<0){
+  $('enote').textContent='Introdueix una quantitat vàlida.';
+  $('esubmit').disabled=false;
+  return;
+ }
+
  let t=eTrials[ei];
- data.estimate.push({trial:ei+1,range:`Grup ${t.group}`,actual:t.actual,response:Number(raw),timeMs:Math.round(performance.now()-eStart)});
+ data.estimate.push({
+  trial:ei+1,
+  range:`Grup ${t.group}`,
+  actual:t.actual,
+  response:Number(raw),
+  timeMs:Math.round(performance.now()-eStart)
+ });
+
  saveRunProgress('estimate');
  ei++;
+
  if(ei>=25){
-  completeRun('estimate');
   done('Estimació completada','Has completat els 25 estímuls. S’han registrat la quantitat estimada, la quantitat real i el temps de resposta.');
   return;
  }
- $('enextcount').textContent=`${Math.min(ei+1,25)} / 25`;
+
+ $('enextcount').textContent=`${ei+1} / 25`;
  showScreen('estimateNext');
 }
-function nextEstimate(){showScreen('estimate');renderEstimate()}
-$('eanswer').addEventListener('keydown',e=>{if(e.key==='Enter'&&!$('esubmit').disabled)submitEstimate()});
+
+function nextEstimate(){
+ showScreen('estimate');
+ renderEstimate();
+}
+
+$('eanswer').addEventListener('keydown',e=>{
+ if(e.key==='Enter'&&!$('esubmit').disabled)submitEstimate();
+});
 
 /* RECTA NUMÈRICA */
+
 function makeLine(){
  let a=[];
  for(let i=0;i<10;i++){
-  let lo=i*10,hi=(i+1)*10-1;
+  let lo=i*10;
+  let hi=(i+1)*10-1;
   if(lo===0)lo=1;
   if(hi>=100)hi=99;
   a.push(rand(lo,hi));
@@ -675,7 +838,9 @@ function makeLine(){
 }
 
 function startLine(){
- lTrials=makeLine();li=0;data.line=[];
+ lTrials=makeLine();
+ li=0;
+ data.line=[];
  startRun('line');
  showScreen('line');
  $('ltarget').style.visibility='hidden';
@@ -685,10 +850,10 @@ function startLine(){
 
 function renderLine(){
  if(li>=10){
-  completeRun('line');
   done('Recta numèrica completada','Has completat els 10 estímuls. S’han registrat la resposta, l’error absolut i el temps de resposta.');
   return;
  }
+
  $('lc').textContent=`${li+1} / 10`;
  $('lp').style.width=`${li/10*100}%`;
  $('ltarget').textContent=lTrials[li];
@@ -700,21 +865,34 @@ function renderLine(){
 $('linehit').addEventListener('pointerdown',e=>{
  if(!lineReady)return;
  lineReady=false;
+
  let r=$('linehit').getBoundingClientRect();
  let guess=Math.round(Math.max(0,Math.min(1,(e.clientX-r.left)/r.width))*100);
  let target=lTrials[li];
- data.line.push({trial:li+1,target,response:guess,error:Math.abs(target-guess),timeMs:Math.round(performance.now()-lStart)});
+
+ data.line.push({
+  trial:li+1,
+  target,
+  response:guess,
+  error:Math.abs(target-guess),
+  timeMs:Math.round(performance.now()-lStart)
+ });
+
  saveRunProgress('line');
  $('ltarget').style.visibility='hidden';
  li++;
  setTimeout(renderLine,2000);
 });
 
-/* HISTORIAL I RESULTATS */
-function cell(v){return '"'+String(v??'').replace(/"/g,'""')+'"'}
-function moduleLabel(m){return ({mental:'Càlcul mental',estimate:'Estimació',line:'Recta numèrica'})[m]||m}
-function safeFile(v){return String(v||'usuari').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-zA-Z0-9_-]+/g,'_')}
-function escapeHtml(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+/* HISTORIAL, RESULTATS I EXPORTACIÓ */
+
+function cell(v){
+ return '"'+String(v??'').replace(/"/g,'""')+'"';
+}
+
+function moduleLabel(m){
+ return ({mental:'Càlcul mental',estimate:'Estimació',line:'Recta numèrica'})[m]||m;
+}
 
 function rowsForRun(u,run){
  const p=u.profile||{};
@@ -734,21 +912,36 @@ function rowsForRun(u,run){
 }
 
 function downloadRows(rows,filename){
- if(!rows.length){alert('No hi ha resultats per exportar.');return}
+ if(!rows.length){
+  alert('No hi ha resultats per exportar.');
+  return;
+ }
+
  const headers=[...new Set(rows.flatMap(r=>Object.keys(r)))];
- const csv=[headers.map(cell).join(';'),...rows.map(r=>headers.map(h=>cell(r[h])).join(';'))].join('\r\n');
+ const csv=[
+  headers.map(cell).join(';'),
+  ...rows.map(r=>headers.map(h=>cell(r[h])).join(';'))
+ ].join('\r\n');
+
  const blob=new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8;'});
  const url=URL.createObjectURL(blob);
  const a=document.createElement('a');
- a.href=url;a.download=filename;
- document.body.appendChild(a);a.click();a.remove();
+ a.href=url;
+ a.download=filename;
+ document.body.appendChild(a);
+ a.click();
+ a.remove();
  setTimeout(()=>URL.revokeObjectURL(url),1000);
+}
+
+function safeFile(v){
+ return String(v||'usuari').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-zA-Z0-9_-]+/g,'_');
 }
 
 function downloadAllCSV(){
  const u=users.find(x=>x.id===currentUserId);
  if(!u)return alert('No hi ha cap usuari carregat.');
- const rows=(u.sessions||[]).flatMap(r=>rowsForRun(u,r));
+ let rows=(u.sessions||[]).flatMap(r=>rowsForRun(u,r));
  downloadRows(rows,`NUMBER15_${safeFile(u.profile.name)}_tots_els_resultats.csv`);
 }
 
@@ -762,8 +955,10 @@ function exportSelectedRun(){
 function showHistory(){
  const u=users.find(x=>x.id===currentUserId);
  if(!u)return;
+
  const sessions=(u.sessions||[]).slice().sort((a,b)=>b.startedAt.localeCompare(a.startedAt));
  $('history-user').textContent=`Historial de ${u.profile.name}. Cada entrada correspon a una execució d’un mòdul.`;
+
  const list=$('history-list');
 
  if(!sessions.length){
@@ -773,6 +968,7 @@ function showHistory(){
    const date=new Date(r.startedAt).toLocaleString('ca-ES');
    const status=r.status==='completed'?'Completada':'Incompleta';
    const n=(r.results||[]).length;
+
    return `<div class="history-item">
     <h3>${escapeHtml(moduleLabel(r.module))}</h3>
     <div class="history-meta">${escapeHtml(date)} · ${status} · ${n} respostes</div>
@@ -783,6 +979,7 @@ function showHistory(){
    </div>`;
   }).join('');
  }
+
  showScreen('history');
 }
 
@@ -801,28 +998,41 @@ function viewRun(id){
  $('detail-meta').textContent=`${u.profile.name} · ${new Date(r.startedAt).toLocaleString('ca-ES')} · ${r.status==='completed'?'Completada':'Incompleta'}`;
 
  const rows=r.results||[];
+
  if(!rows.length){
   $('detail-content').innerHTML='<p class="note">Aquesta prova encara no té respostes desades.</p>';
  }else{
   const keys=[...new Set(rows.flatMap(x=>Object.keys(x)))];
   $('detail-content').innerHTML='<table><thead><tr>'+keys.map(k=>`<th>${escapeHtml(k)}</th>`).join('')+'</tr></thead><tbody>'+rows.map(x=>'<tr>'+keys.map(k=>`<td>${escapeHtml(x[k]??'')}</td>`).join('')+'</tr>').join('')+'</tbody></table>';
  }
+
  showScreen('historyDetail');
 }
 
 /* CÒPIA DE SEGURETAT I RESTAURACIÓ */
+
 function backupUsers(){
- const blob=new Blob([JSON.stringify({app:'NUMBER15',version:3,exportedAt:new Date().toISOString(),users},null,2)],{type:'application/json'});
+ const blob=new Blob([JSON.stringify({
+  app:'NUMBER15',
+  version:3,
+  exportedAt:new Date().toISOString(),
+  users
+ },null,2)],{type:'application/json'});
+
  const url=URL.createObjectURL(blob);
  const a=document.createElement('a');
- a.href=url;a.download='NUMBER15_copia_seguretat.json';
- document.body.appendChild(a);a.click();a.remove();
+ a.href=url;
+ a.download='NUMBER15_copia_seguretat.json';
+ document.body.appendChild(a);
+ a.click();
+ a.remove();
  setTimeout(()=>URL.revokeObjectURL(url),1000);
 }
 
 function restoreUsers(event){
  const file=event.target.files?.[0];
  if(!file)return;
+
  const reader=new FileReader();
 
  reader.onload=()=>{
@@ -835,6 +1045,7 @@ function restoreUsers(event){
    const map=new Map(users.map(u=>[u.id,u]));
    obj.users.forEach(u=>map.set(u.id,u));
    users=[...map.values()];
+
    persistUsers();
    renderUserSelect();
    $('home-note').textContent='Còpia de seguretat importada correctament.';
@@ -844,6 +1055,7 @@ function restoreUsers(event){
    event.target.value='';
   }
  };
+
  reader.readAsText(file);
 }
 
@@ -853,7 +1065,9 @@ function resetAll(){
  if(!u)return;
  u.sessions=[];
  persistUsers();
- data.mental=[];data.estimate=[];data.line=[];
+ data.mental=[];
+ data.estimate=[];
+ data.line=[];
  activeRun=null;
  updateStatus();
  showScreen('hub');
