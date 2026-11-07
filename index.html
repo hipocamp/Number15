@@ -1,4 +1,3 @@
-
 <!doctype html>
 <html lang="ca">
 <head>
@@ -81,7 +80,7 @@ footer{text-align:center;color:#94a3b8;font-size:12px;padding:20px}
  <div class="card">
   <h2>Benvingut/da a NUMBER15</h2>
   <p class="intro">Aplicació d'avaluació numèrica amb dades personals centralitzades i tres mòduls de prova. Introdueix les dades una sola vegada i després accedeix als mòduls.</p>
-  <button class="btn" id="home-action" onclick="homeAction()">Introduir dades i començar</button>
+  <button class="btn" onclick="showScreen('profile')">Introduir dades i començar</button>
  </div>
  <div class="grid">
   <div class="module"><div class="symbol">👤</div><h3>Dades personals</h3><p>Identificació i característiques de la sessió.</p></div>
@@ -147,26 +146,28 @@ footer{text-align:center;color:#94a3b8;font-size:12px;padding:20px}
   <h2>Panell d'avaluació</h2>
   <p class="intro">Pots completar els mòduls en qualsevol ordre. Els resultats es conserven en aquesta sessió fins que tanquis o recarreguis la pàgina.</p>
   <p id="profile-summary" class="note"></p>
-  <div class="btnrow">
-   <button class="btn secondary" onclick="editProfile()">EDITAR USUARI</button>
-  </div>
  </div>
 
  <div class="grid">
   <div class="module">
-   <div class="symbol">➕</div><h3>Càlcul mental</h3>
+   <div class="symbol">➕</div>
+   <h3>Càlcul mental</h3>
    <p>20 operacions de dificultat creixent.</p>
    <div class="status" id="ms">Pendent</div>
    <button class="btn" onclick="startMental()">Iniciar mòdul</button>
   </div>
+
   <div class="module">
-   <div class="symbol">🔵</div><h3>Estimació</h3>
+   <div class="symbol">🔵</div>
+   <h3>Estimació</h3>
    <p>25 estímuls amb exposició de 500 ms.</p>
    <div class="status" id="es">Pendent</div>
    <button class="btn" onclick="startEstimate()">Iniciar mòdul</button>
   </div>
+
   <div class="module">
-   <div class="symbol">〰️</div><h3>Recta numèrica</h3>
+   <div class="symbol">〰️</div>
+   <h3>Recta numèrica</h3>
    <p>10 estímuls en una línia del 0 al 100.</p>
    <div class="status" id="ls">Pendent</div>
    <button class="btn" onclick="startLine()">Iniciar mòdul</button>
@@ -178,7 +179,7 @@ footer{text-align:center;color:#94a3b8;font-size:12px;padding:20px}
   <p class="note">Exporta un CSV amb una fila per estímul, les dades personals i els indicadors resumits del càlcul mental.</p>
   <div class="btnrow">
    <button class="btn" onclick="downloadCSV()">Descarregar CSV</button>
-   <button class="btn secondary" onclick="resetAll()">Reiniciar tests</button>
+   <button class="btn secondary" onclick="resetAll()">Reiniciar sessió</button>
   </div>
  </div>
 </section>
@@ -198,12 +199,32 @@ footer{text-align:center;color:#94a3b8;font-size:12px;padding:20px}
  </div>
 </section>
 
+<!-- PANTALLA D'INSTRUCCIONS D'ESTIMACIÓ -->
+<section id="estimateIntro" class="screen">
+ <div class="card">
+  <div class="topline">
+   <span>ESTIMACIÓ</span>
+   <span>INSTRUCCIONS</span>
+  </div>
+
+  <div class="stage" style="min-height:260px;flex-direction:column;text-align:center;padding:24px">
+   <h1 class="target" style="font-size:clamp(26px,5vw,38px)">ESTIMACIÓ</h1>
+   <p class="intro">Ara veuràs breument un conjunt de punts blaus. Fes una estimació de quants en veus.</p>
+  </div>
+
+  <div class="answer">
+   <button class="btn" id="estartbutton" style="width:100%" onclick="beginEstimate()">COMENÇAR</button>
+  </div>
+ </div>
+</section>
+
 <section id="estimate" class="screen">
  <div class="card">
   <div class="topline"><span>ESTIMACIÓ</span><span id="ec">1 / 25</span></div>
   <div class="progress"><div id="ep"></div></div>
   <div class="center"><span class="pill" id="ecat" style="display:none"></span></div>
   <div class="stage"><div id="dots" class="dots"></div></div>
+
   <div class="answer">
    <label for="eanswer">Quantes boletes has vist?</label>
    <input id="eanswer" type="number" min="0" max="100" inputmode="numeric" placeholder="Escriu la quantitat">
@@ -259,10 +280,8 @@ footer{text-align:center;color:#94a3b8;font-size:12px;padding:20px}
 <footer>NUMBER15 · NeurekaLAB</footer>
 
 <script>
-const PROFILE_KEY='number15_profile_v1';
 const profile={sex:'',birth:'',education:'',device:''};
 const data={mental:[],estimate:[],line:[]};
-let savedProfile=null;
 
 let mTrials=[],mi=0,mStart=0;
 let eTrials=[],ei=0,eStart=0;
@@ -281,76 +300,9 @@ function pick(el,type){
  document.querySelectorAll(type==='sex'?'[data-sex]':'.choices button:not([data-sex])')
   .forEach(x=>x.classList.remove('selected'));
  el.classList.add('selected');
+
  if(type==='sex')profile.sex=el.dataset.sex;
  else profile.device=el.textContent.replace(/[📱📟💻]/g,'').trim();
-}
-
-/* GESTIÓ I DESAMENT DEL PERFIL */
-
-function hasResults(){
- return data.mental.length>0||data.estimate.length>0||data.line.length>0;
-}
-
-function sameProfile(a,b){
- return !!a&&!!b&&['sex','birth','education','device'].every(k=>(a[k]||'')===(b[k]||''));
-}
-
-function clearResults(){
- Object.keys(data).forEach(k=>data[k]=[]);
- updateStatus();
-}
-
-function renderProfileSummary(){
- const p=profile;
- $('profile-summary').textContent=
-  `Usuari actiu · Sexe: ${p.sex} · Naixement: ${p.birth} · Estudis: ${p.education} · Dispositiu: ${p.device}`;
-}
-
-function fillProfileForm(){
- document.querySelectorAll('[data-sex]').forEach(x=>{
-  x.classList.toggle('selected',x.dataset.sex===profile.sex);
- });
- document.querySelectorAll('.choices button:not([data-sex])').forEach(x=>{
-  const v=x.textContent.replace(/[📱📟💻]/g,'').trim();
-  x.classList.toggle('selected',v===profile.device);
- });
- $('birth').value=profile.birth||'';
- $('education').value=profile.education||'';
-}
-
-function loadProfile(){
- try{
-  const p=JSON.parse(localStorage.getItem(PROFILE_KEY)||'null');
-  if(p&&p.sex&&p.birth&&p.education&&p.device){
-   Object.assign(profile,p);
-   savedProfile={...p};
-   fillProfileForm();
-   renderProfileSummary();
-   $('home-action').textContent='Continuar amb aquest usuari';
-   showScreen('hub');
-   updateStatus();
-   return true;
-  }
- }catch(e){
-  console.warn('No s’ha pogut recuperar el perfil',e);
- }
- $('home-action').textContent='Introduir dades i començar';
- return false;
-}
-
-function homeAction(){
- if(savedProfile){
-  renderProfileSummary();
-  showScreen('hub');
- }else{
-  showScreen('profile');
- }
-}
-
-function editProfile(){
- fillProfileForm();
- $('profile-error').textContent='';
- showScreen('profile');
 }
 
 function saveProfile(){
@@ -367,31 +319,10 @@ function saveProfile(){
   return;
  }
 
- const next={...profile};
+ $('profile-summary').textContent=
+  `Sexe: ${profile.sex} · Naixement: ${profile.birth} · Estudis: ${profile.education} · Dispositiu: ${profile.device}`;
 
- if(savedProfile&&!sameProfile(savedProfile,next)&&hasResults()){
-  if(!confirm('Has canviat d’usuari o de dades personals. Per evitar barrejar resultats, s’esborraran els resultats d’aquesta sessió. Vols continuar?')){
-   Object.assign(profile,savedProfile);
-   fillProfileForm();
-   renderProfileSummary();
-   showScreen('hub');
-   return;
-  }
-  clearResults();
- }
-
- try{
-  localStorage.setItem(PROFILE_KEY,JSON.stringify(next));
- }catch(e){
-  $('profile-error').textContent='No s’han pogut desar les dades en aquest navegador. Comprova la configuració d’emmagatzematge.';
-  return;
- }
-
- savedProfile={...next};
- renderProfileSummary();
- $('home-action').textContent='Continuar amb aquest usuari';
  showScreen('hub');
- updateStatus();
 }
 
 function toHub(){
@@ -425,39 +356,47 @@ function shuffle(a){
 function makeMental(){
  let a=[];
 
+ // Sumes de dos dígits.
  for(let i=0;i<5;i++){
   let x,y;
   do{
    x=rand(12+i*7,39+i*10);
    y=rand(11+i*8,35+i*12);
   }while((i===0&&x%10+y%10>=10)||(i>0&&x%10+y%10<10));
+
   a.push({op:'+',kind:'Suma',digits:2,x,y,answer:x+y,cat:'Suma_2_digits'});
  }
 
+ // Sumes de tres dígits.
  for(let i=0;i<5;i++){
   let x,y;
   do{
    x=rand(112+i*90,390+i*100);
    y=rand(101+i*70,350+i*110);
   }while((i===0&&x%10+y%10>=10)||(i>0&&x%10+y%10<10));
+
   a.push({op:'+',kind:'Suma',digits:3,x,y,answer:x+y,cat:'Suma_3_digits'});
  }
 
+ // Restes de dos dígits.
  for(let i=0;i<5;i++){
   let x,y;
   do{
    x=rand(45+i*5,99);
    y=rand(10,Math.min(80,x-1));
   }while((i===0&&x%10<y%10)||(i>0&&x%10>=y%10));
+
   a.push({op:'−',kind:'Resta',digits:2,x,y,answer:x-y,cat:'Resta_2_digits'});
  }
 
+ // Restes de tres dígits.
  for(let i=0;i<5;i++){
   let x,y;
   do{
    x=rand(350,999);
    y=rand(100,Math.min(800,x-1));
   }while((i===0&&x%10<y%10)||(i>0&&x%10>=y%10));
+
   a.push({op:'−',kind:'Resta',digits:3,x,y,answer:x-y,cat:'Resta_3_digits'});
  }
 
@@ -492,6 +431,7 @@ function renderMental(){
 
 function submitMental(){
  let raw=$('manswer').value;
+
  if(raw.trim()===''){
   $('mnote').textContent='Escriu una resposta abans de continuar.';
   return;
@@ -524,15 +464,23 @@ $('manswer').addEventListener('keydown',e=>{
 function makeEstimate(){
  let a=[];
  [[1,4],[5,20],[21,30],[31,40],[41,50]].forEach(([lo,hi],g)=>{
-  for(let i=0;i<5;i++)a.push({actual:rand(lo,hi),group:g+1});
+  for(let i=0;i<5;i++){
+   a.push({actual:rand(lo,hi),group:g+1});
+  }
  });
  return shuffle(a);
 }
 
+/* En entrar al mòdul, primer es mostra la pantalla d'instruccions. */
 function startEstimate(){
  eTrials=makeEstimate();
  ei=0;
  data.estimate=[];
+ showScreen('estimateIntro');
+}
+
+/* El primer estímul només apareix quan es prem COMENÇAR. */
+function beginEstimate(){
  showScreen('estimate');
  renderEstimate();
 }
@@ -564,6 +512,7 @@ function renderEstimate(){
 
  for(let i=0;i<t.actual;i++){
   let x,y,tries=0;
+
   do{
    x=rand(8,w-21);
    y=rand(8,h-21);
@@ -571,6 +520,7 @@ function renderEstimate(){
   }while(tries<60&&points.some(p=>Math.hypot(p.x-x,p.y-y)<15));
 
   points.push({x,y});
+
   let d=document.createElement('i');
   d.className='dot';
   d.style.left=x+'px';
@@ -607,18 +557,19 @@ function submitEstimate(){
 
  ei++;
 
+ /* Evita que el comptador mostri 26 / 25 després de l'últim estímul. */
  $('enextcount').textContent=`${Math.min(ei+1,25)} / 25`;
- $('enextbutton').textContent=ei>=25?'FINALITZAR':'SEGÜENT';
 
- showScreen('estimateNext');
-}
-
-function nextEstimate(){
  if(ei>=25){
   done('Estimació completada',
    'Has completat els 25 estímuls. S’han registrat la quantitat estimada, la quantitat real i el temps de resposta.');
   return;
  }
+
+ showScreen('estimateNext');
+}
+
+function nextEstimate(){
  showScreen('estimate');
  renderEstimate();
 }
@@ -631,13 +582,17 @@ $('eanswer').addEventListener('keydown',e=>{
 
 function makeLine(){
  let a=[];
+
  for(let i=0;i<10;i++){
   let lo=i*10;
   let hi=(i+1)*10-1;
+
   if(lo===0)lo=1;
   if(hi>=100)hi=99;
+
   a.push(rand(lo,hi));
  }
+
  return shuffle(a);
 }
 
@@ -706,6 +661,7 @@ function downloadCSV(){
  groups.forEach(g=>{
   let s=data.mental.filter(x=>x.category===g);
   let c=s.filter(x=>x.correct);
+
   sum[g]={
    hits:c.length,
    mean:c.length?Math.round(c.reduce((n,x)=>n+x.timeMs,0)/c.length):''
@@ -778,25 +734,24 @@ function downloadCSV(){
  document.body.appendChild(a);
  a.click();
  a.remove();
+
  URL.revokeObjectURL(url);
 }
 
-/* REINICIAR ELS TESTS SENSE ESBORRAR EL PERFIL */
-
 function resetAll(){
- if(!confirm('Vols esborrar tots els resultats dels tests? Les dades personals es conservaran.'))return;
+ if(!confirm('Vols esborrar les dades i els resultats d’aquesta sessió?'))return;
 
- clearResults();
+ Object.keys(data).forEach(k=>data[k]=[]);
+ Object.keys(profile).forEach(k=>profile[k]='');
+
+ document.querySelectorAll('.choice').forEach(x=>x.classList.remove('selected'));
+ $('birth').value='';
+ $('education').value='';
+ $('profile-error').textContent='';
+
  updateStatus();
- showScreen('hub');
+ showScreen('home');
 }
-
-/* RECUPERAR L'USUARI EN OBRIR LA PÀGINA */
-
-window.addEventListener('DOMContentLoaded',()=>{
- loadProfile();
-});
 </script>
 </body>
 </html>
-
