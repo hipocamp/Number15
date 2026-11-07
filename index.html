@@ -1,4 +1,3 @@
-
 <!doctype html>
 <html lang="ca">
 <head>
@@ -55,6 +54,8 @@ input,select{width:100%;padding:13px;border:2px solid #e8edf3;border-radius:10px
 .linehit{height:125px;display:flex;align-items:center;position:relative;touch-action:pan-y;cursor:crosshair;user-select:none;-webkit-user-select:none}
 .bar{height:5px;width:100%;background:#334155;border-radius:5px}
 .tick{position:absolute;height:34px;width:2px;background:#334155;top:calc(50% - 17px)}
+.response-marker{position:absolute;top:50%;height:38px;width:3px;background:#dc2626;border-radius:3px;transform:translate(-50%,-50%);z-index:5;pointer-events:none;box-shadow:0 0 0 2px #fff}
+.response-marker:after{content:"";position:absolute;width:9px;height:9px;border-radius:50%;background:#dc2626;left:50%;top:50%;transform:translate(-50%,-50%)}
 .target{font-size:clamp(58px,10vw,90px);font-weight:900;margin:0}
 .dots{width:100%;height:245px;min-height:220px;position:relative;overflow:hidden;border:1px solid #eef2f7;border-radius:13px;background:#f8fafc}
 .dot{position:absolute;width:13px;height:13px;background:#2563eb;border-radius:50%}
@@ -121,7 +122,7 @@ footer{text-align:center;color:#94a3b8;font-size:12px;padding:20px}
   <div class="module">
    <div class="symbol">➕</div>
    <h3>Càlcul mental</h3>
-   <p>20 sumes i restes de dos i tres dígits.</p>
+   <p>50 sumes i restes amb operands d’1, 2 i 3 dígits.</p>
   </div>
   <div class="module">
    <div class="symbol">🔵</div>
@@ -131,7 +132,7 @@ footer{text-align:center;color:#94a3b8;font-size:12px;padding:20px}
   <div class="module">
    <div class="symbol">〰️</div>
    <h3>Recta numèrica</h3>
-   <p>10 nombres per situar entre 0 i 100.</p>
+   <p>10 nombres: cinc per sota de 50 i cinc per sobre de 50.</p>
   </div>
  </div>
 </section>
@@ -203,7 +204,7 @@ footer{text-align:center;color:#94a3b8;font-size:12px;padding:20px}
   <div class="module">
    <div class="symbol">➕</div>
    <h3>Càlcul mental</h3>
-   <p>20 operacions de dificultat creixent.</p>
+   <p>50 operacions en cinc combinacions de dígits.</p>
    <div class="status" id="ms">Pendent</div>
    <button class="btn" onclick="startMental()">Iniciar mòdul</button>
   </div>
@@ -254,7 +255,7 @@ footer{text-align:center;color:#94a3b8;font-size:12px;padding:20px}
  <div class="card">
   <div class="topline">
    <span>CÀLCUL MENTAL</span>
-   <span id="mc">1 / 20</span>
+   <span id="mc">1 / 50</span>
   </div>
   <div class="progress"><div id="mp"></div></div>
   <div class="center"><span class="pill" id="mcat">SUMA · 2 DÍGITS</span></div>
@@ -323,6 +324,7 @@ footer{text-align:center;color:#94a3b8;font-size:12px;padding:20px}
     <div class="bar"></div>
     <div class="tick" style="left:0"></div>
     <div class="tick" style="right:0"></div>
+    <div id="line-marker" class="response-marker" style="display:none;left:0%"></div>
    </div>
   </div>
   <p class="note">Toca o fes clic a la posició que consideris correcta.</p>
@@ -376,10 +378,10 @@ let editingUserId=null;
 let activeRun=null;
 let selectedRunId=null;
 
-let mTrials=[],mi=0,mStart=0;
-let eTrials=[],ei=0,eStart=0;
+let mTrials=[],mi=0,mStart=0,mStopTime=null;
+let eTrials=[],ei=0,eStart=0,eStopTime=null;
 let lTrials=[],li=0,lStart=0,lineReady=false;
-let doneTimer=null;
+let doneTimer=null,lineNextTimer=null;
 
 const $=id=>document.getElementById(id);
 const rand=(a,b)=>Math.floor(Math.random()*(b-a+1))+a;
@@ -603,49 +605,41 @@ function shuffle(a){
 /* CÀLCUL MENTAL */
 
 function makeMental(){
- let a=[];
-
- // Sumes de dos dígits.
- for(let i=0;i<5;i++){
-  let x,y;
-  do{
-   x=rand(12+i*7,39+i*10);
-   y=rand(11+i*8,35+i*12);
-  }while((i===0&&x%10+y%10>=10)||(i>0&&x%10+y%10<10));
-  a.push({op:'+',kind:'Suma',digits:2,x,y,answer:x+y,cat:'Suma_2_digits'});
+ const trials=[];
+ const addCategories=[
+  {a:1,b:1,label:'1+1'},
+  {a:1,b:2,label:'1+2'},
+  {a:2,b:2,label:'2+2'},
+  {a:2,b:3,label:'2+3'},
+  {a:3,b:3,label:'3+3'}
+ ];
+ const range=n=>n===1?[1,9]:n===2?[10,99]:[100,999];
+ // Cinc sumes per cadascuna de les cinc combinacions de dígits.
+ for(const c of addCategories){
+  const [amin,amax]=range(c.a),[bmin,bmax]=range(c.b);
+  for(let i=0;i<5;i++){
+   const x=rand(amin,amax),y=rand(bmin,bmax);
+   trials.push({op:'+',kind:'Suma',x,y,answer:x+y,cat:`Suma_${c.label}`,categoryLabel:c.label});
+  }
  }
-
- // Sumes de tres dígits.
- for(let i=0;i<5;i++){
-  let x,y;
-  do{
-   x=rand(112+i*90,390+i*100);
-   y=rand(101+i*70,350+i*110);
-  }while((i===0&&x%10+y%10>=10)||(i>0&&x%10+y%10<10));
-  a.push({op:'+',kind:'Suma',digits:3,x,y,answer:x+y,cat:'Suma_3_digits'});
+ // En les restes, el nombre de més dígits va primer per evitar resultats negatius.
+ // Les categories 1+2 i 2+3 es representen com 2-1 i 3-2.
+ const subCategories=[
+  {a:1,b:1,label:'1-1',requested:'1+1'},
+  {a:2,b:1,label:'2-1',requested:'1+2'},
+  {a:2,b:2,label:'2-2',requested:'2+2'},
+  {a:3,b:2,label:'3-2',requested:'2+3'},
+  {a:3,b:3,label:'3-3',requested:'3+3'}
+ ];
+ for(const c of subCategories){
+  const [amin,amax]=range(c.a),[bmin,bmax]=range(c.b);
+  for(let i=0;i<5;i++){
+   let x,y;
+   do{x=rand(amin,amax);y=rand(bmin,bmax)}while(x<=y);
+   trials.push({op:'−',kind:'Resta',x,y,answer:x-y,cat:`Resta_${c.label}`,categoryLabel:c.label,requestedCategory:c.requested});
+  }
  }
-
- // Restes de dos dígits.
- for(let i=0;i<5;i++){
-  let x,y;
-  do{
-   x=rand(45+i*5,99);
-   y=rand(10,Math.min(80,x-1));
-  }while((i===0&&x%10<y%10)||(i>0&&x%10>=y%10));
-  a.push({op:'−',kind:'Resta',digits:2,x,y,answer:x-y,cat:'Resta_2_digits'});
- }
-
- // Restes de tres dígits.
- for(let i=0;i<5;i++){
-  let x,y;
-  do{
-   x=rand(350,999);
-   y=rand(100,Math.min(800,x-1));
-  }while((i===0&&x%10<y%10)||(i>0&&x%10>=y%10));
-  a.push({op:'−',kind:'Resta',digits:3,x,y,answer:x-y,cat:'Resta_3_digits'});
- }
-
- return a;
+ return shuffle(trials);
 }
 
 function startMental(){
@@ -662,49 +656,49 @@ function beginMental(){
 }
 
 function renderMental(){
- if(mi>=20){
-  done('Càlcul mental completat',`Has completat les 20 operacions. Encerts: ${data.mental.filter(x=>x.correct).length}/20.`);
+ if(mi>=50){
+  done('Càlcul mental completat',`Has completat les 50 operacions. Encerts: ${data.mental.filter(x=>x.correct).length}/50.`);
   return;
  }
-
- let t=mTrials[mi];
- $('mc').textContent=`${mi+1} / 20`;
- $('mp').style.width=`${mi/20*100}%`;
- $('mcat').textContent=`${t.kind.toUpperCase()} · ${t.digits} DÍGITS`;
+ const t=mTrials[mi];
+ $('mc').textContent=`${mi+1} / 50`;
+ $('mp').style.width=`${mi/50*100}%`;
+ $('mcat').textContent=`${t.kind.toUpperCase()} · ${t.categoryLabel} DÍGITS`;
  $('op').textContent=`${t.x} ${t.op} ${t.y} =`;
  $('manswer').value='';
  $('mnote').textContent='Respon tan ràpid i bé com puguis.';
  mStart=performance.now();
+ mStopTime=null;
  $('manswer').focus();
 }
 
+function stopMentalClock(){if(mStopTime===null)mStopTime=performance.now()-mStart}
+
 function submitMental(){
- if(mi>=20)return;
- let raw=$('manswer').value;
+ if(mi>=50)return;
+ const raw=$('manswer').value;
  if(raw.trim()===''){
   $('mnote').textContent='Escriu una resposta abans de continuar.';
   return;
  }
-
- let t=mTrials[mi];
- let response=Number(raw);
- let time=Math.round(performance.now()-mStart);
-
+ stopMentalClock();
+ const t=mTrials[mi],response=Number(raw),time=Math.round(mStopTime);
  data.mental.push({
   trial:mi+1,
   category:t.cat,
+  requestedCategory:t.requestedCategory||t.categoryLabel,
   operation:`${t.x} ${t.op} ${t.y}`,
   response,
   correctAnswer:t.answer,
   correct:response===t.answer,
   timeMs:time
  });
-
  saveRunProgress('mental');
  mi++;
  renderMental();
 }
 
+$('manswer').addEventListener('input',stopMentalClock);
 $('manswer').addEventListener('keydown',e=>{
  if(e.key==='Enter')submitMental();
 });
@@ -713,8 +707,8 @@ $('manswer').addEventListener('keydown',e=>{
 
 function makeEstimate(){
  let a=[];
- [[1,4],[5,20],[21,30],[31,40],[41,50]].forEach(([lo,hi],g)=>{
-  for(let i=0;i<5;i++)a.push({actual:rand(lo,hi),group:g+1});
+ [[1,5],[6,20],[21,30],[31,40],[41,50]].forEach(([lo,hi],g)=>{
+  for(let i=0;i<5;i++)a.push({actual:rand(lo,hi),group:g+1,rangeLabel:`${lo}-${hi}`});
  });
  return shuffle(a);
 }
@@ -742,6 +736,7 @@ function renderEstimate(){
  $('ec').textContent=`${ei+1} / 25`;
  $('ep').style.width=`${ei/25*100}%`;
  $('eanswer').value='';
+ eStopTime=null;
  $('esubmit').disabled=true;
  $('enote').textContent='Observa l’estímul i estima quantes boletes hi havia.';
 
@@ -775,12 +770,17 @@ function renderEstimate(){
   setTimeout(()=>{
    box.classList.add('hidden');
    eStart=performance.now();
+   eStopTime=null;
    $('esubmit').disabled=false;
    $('enote').textContent='Escriu quantes boletes creus que has vist.';
    $('eanswer').focus();
   },500);
  });
 }
+
+function stopEstimateClock(){if(eStopTime===null)eStopTime=performance.now()-eStart}
+
+$('eanswer').addEventListener('input',stopEstimateClock);
 
 function submitEstimate(){
  if($('esubmit').disabled)return;
@@ -793,13 +793,15 @@ function submitEstimate(){
   return;
  }
 
+ stopEstimateClock();
  let t=eTrials[ei];
  data.estimate.push({
   trial:ei+1,
-  range:`Grup ${t.group}`,
+  range:t.rangeLabel,
+  rangeGroup:t.group,
   actual:t.actual,
   response:Number(raw),
-  timeMs:Math.round(performance.now()-eStart)
+  timeMs:Math.round(eStopTime)
  });
 
  saveRunProgress('estimate');
@@ -826,24 +828,21 @@ $('eanswer').addEventListener('keydown',e=>{
 /* RECTA NUMÈRICA */
 
 function makeLine(){
- let a=[];
- for(let i=0;i<10;i++){
-  let lo=i*10;
-  let hi=(i+1)*10-1;
-  if(lo===0)lo=1;
-  if(hi>=100)hi=99;
-  a.push(rand(lo,hi));
- }
- return shuffle(a);
+ const low=new Set(),high=new Set();
+ while(low.size<5)low.add(rand(1,49));
+ while(high.size<5)high.add(rand(51,99));
+ return shuffle([...low,...high]);
 }
 
 function startLine(){
+ if(lineNextTimer){clearTimeout(lineNextTimer);lineNextTimer=null}
  lTrials=makeLine();
  li=0;
  data.line=[];
  startRun('line');
  showScreen('line');
  $('ltarget').style.visibility='hidden';
+ $('line-marker').style.display='none';
  lineReady=false;
  setTimeout(renderLine,2000);
 }
@@ -858,6 +857,7 @@ function renderLine(){
  $('lp').style.width=`${li/10*100}%`;
  $('ltarget').textContent=lTrials[li];
  $('ltarget').style.visibility='visible';
+ $('line-marker').style.display='none';
  lStart=performance.now();
  lineReady=true;
 }
@@ -865,23 +865,20 @@ function renderLine(){
 $('linehit').addEventListener('pointerdown',e=>{
  if(!lineReady)return;
  lineReady=false;
-
- let r=$('linehit').getBoundingClientRect();
- let guess=Math.round(Math.max(0,Math.min(1,(e.clientX-r.left)/r.width))*100);
- let target=lTrials[li];
-
- data.line.push({
-  trial:li+1,
-  target,
-  response:guess,
-  error:Math.abs(target-guess),
-  timeMs:Math.round(performance.now()-lStart)
- });
-
+ const r=$('linehit').getBoundingClientRect();
+ const fraction=Math.max(0,Math.min(1,(e.clientX-r.left)/r.width));
+ const guess=Math.round(fraction*100),target=lTrials[li];
+ const elapsed=Math.round(performance.now()-lStart);
+ const marker=$('line-marker');
+ marker.style.left=`${fraction*100}%`;
+ marker.style.display='block';
+ data.line.push({trial:li+1,target,response:guess,error:Math.abs(target-guess),timeMs:elapsed});
  saveRunProgress('line');
  $('ltarget').style.visibility='hidden';
  li++;
- setTimeout(renderLine,2000);
+ // La marca queda visible aproximadament 1,1 segons abans del següent estímul.
+ if(lineNextTimer)clearTimeout(lineNextTimer);
+ lineNextTimer=setTimeout(()=>{lineNextTimer=null;renderLine()},1100);
 });
 
 /* HISTORIAL, RESULTATS I EXPORTACIÓ */
