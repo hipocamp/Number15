@@ -199,6 +199,14 @@ footer{text-align:center;color:#94a3b8;font-size:12px;padding:20px}
    </div>
   </div>
   <div class="field">
+   <label>Dominància manual</label>
+   <div class="choices">
+    <button class="choice" data-handedness="Dretà" onclick="pick(this,'handedness')">Dretà</button>
+    <button class="choice" data-handedness="Esquerrà" onclick="pick(this,'handedness')">Esquerrà</button>
+    <button class="choice" data-handedness="Ambidextre" onclick="pick(this,'handedness')">Ambidextre</button>
+   </div>
+  </div>
+  <div class="field">
    <label>Dispositiu</label>
    <div class="choices">
     <button class="choice" onclick="pick(this,'device')">📱 Mòbil</button>
@@ -369,7 +377,7 @@ footer{text-align:center;color:#94a3b8;font-size:12px;padding:20px}
    <p>Primer compararàs parelles de nombres escrits. Després compararàs parelles de conjunts de punts.</p>
    <p>En cada assaig, selecciona el costat que conté el valor més gran. Respon tan ràpidament i amb tanta precisió com puguis.</p>
    <p><strong>Després de cada resposta veuràs si ha estat correcta.</strong></p>
-   <p class="comparison-instruction">La tasca conté 288 assaigs (144 per condició): les 72 parelles ordenades de nombres de l’1 al 9, amb dues repeticions. En la condició de punts, els valors es multipliquen per cinc (5–45) per evitar la subitització. L’estudi original feia deu repeticions per parella; aquesta és una versió abreujada. Pots respondre amb les fletxes esquerra/dreta o amb els botons. L’ordre de les condicions s’alterna entre participants. La mida visual dels punts és una aproximació en píxels: la pantalla no està calibrada en graus visuals. </p>
+   <p class="comparison-instruction">La tasca conté 288 assaigs (144 per condició): les 72 parelles ordenades de nombres de l’1 al 9, amb dues repeticions. En la condició de punts, els valors es multipliquen per cinc (5–45) per evitar la subitització. L’estudi original feia deu repeticions per parella; aquesta és una versió abreujada. Pots respondre amb les fletxes esquerra/dreta o amb els botons. L’ordre de les condicions s’alterna entre participants. La mida visual dels punts és una aproximació en píxels: la pantalla no està calibrada en graus visuals.</p>
   </div>
   <div class="test-actions"><button class="btn" onclick="beginComparison()">COMENÇAR</button></div>
  </div>
@@ -394,7 +402,6 @@ footer{text-align:center;color:#94a3b8;font-size:12px;padding:20px}
   <div class="center"><span class="pill" id="ccondition">NOMBRES ESCRITS</span></div>
   <p class="comparison-instruction" id="cquestion">Quin nombre és més gran?</p>
   <div class="comparison-pair">
-   <div id="compare-feedback" class="comparison-feedback" style="display:none" aria-live="polite"></div>
    <div class="comparison-side">
     <div class="comparison-value" id="cleft"><span class="comparison-digit">3</span></div>
     <div class="status">ESQUERRA</div>
@@ -403,6 +410,7 @@ footer{text-align:center;color:#94a3b8;font-size:12px;padding:20px}
     <div class="comparison-value" id="cright"><span class="comparison-digit">7</span></div>
     <div class="status">DRETA</div>
    </div>
+   <div id="compare-feedback" class="comparison-feedback" style="display:none" aria-live="polite"></div>
   </div>
   <div class="comparison-responses">
    <button class="btn" id="c-left-btn" onclick="answerComparison('left')">← ESQUERRA</button>
@@ -449,7 +457,7 @@ footer{text-align:center;color:#94a3b8;font-size:12px;padding:20px}
 <footer>NUMBER15 · NeurekaLAB</footer>
 
 <script>
-const profile={name:'',sex:'',birth:'',education:'',device:''};
+const profile={name:'',sex:'',birth:'',education:'',device:'',handedness:''};
 const data={mental:[],estimate:[],line:[],comparison:[]};
 const STORAGE_KEY='number15_users_v3';
 
@@ -459,9 +467,7 @@ let editingUserId=null;
 let activeRun=null;
 let selectedRunId=null;
 
-let mTrials=[],mi=0,mStart=0,mStopTime=null;
-let mConsecutiveErrors=0;
-let mSumSkipped=false;
+let mTrials=[],mi=0,mStart=0,mStopTime=null,mConsecutiveErrors=0;
 let eTrials=[],ei=0,eStart=0,eStopTime=null;
 let lTrials=[],li=0,lStart=0,lineReady=false;
 let comparisonBlocks=[],comparisonOrder=[],comparisonBlockIndex=0,comparisonTrialIndex=0,comparisonStart=0,comparisonReady=false,comparisonNextTimer=null;
@@ -479,9 +485,10 @@ function showScreen(id){
 }
 
 function pick(el,type){
- document.querySelectorAll(type==='sex'?'[data-sex]':'.choices button:not([data-sex])').forEach(x=>x.classList.remove('selected'));
+ el.parentElement.querySelectorAll('button').forEach(x=>x.classList.remove('selected'));
  el.classList.add('selected');
  if(type==='sex')profile.sex=el.dataset.sex;
+ else if(type==='handedness')profile.handedness=el.dataset.handedness;
  else profile.device=el.textContent.replace(/[📱📟💻]/g,'').trim();
 }
 
@@ -515,7 +522,7 @@ function escapeHtml(v){
 
 function newUser(){
  editingUserId=null;
- Object.assign(profile,{name:'',sex:'',birth:'',education:'',device:''});
+ Object.assign(profile,{name:'',sex:'',birth:'',education:'',device:'',handedness:''});
  fillProfileForm();
  $('profile-title').textContent='Crear usuari';
  $('profile-error').textContent='';
@@ -538,7 +545,10 @@ function fillProfileForm(){
  document.querySelectorAll('[data-sex]').forEach(x=>{
   if(x.dataset.sex===profile.sex)x.classList.add('selected');
  });
- document.querySelectorAll('.choices button:not([data-sex])').forEach(x=>{
+ document.querySelectorAll('[data-handedness]').forEach(x=>{
+  if(x.dataset.handedness===profile.handedness)x.classList.add('selected');
+ });
+ document.querySelectorAll('.choices button:not([data-sex]):not([data-handedness])').forEach(x=>{
   if(x.textContent.replace(/[📱📟💻]/g,'').trim()===profile.device)x.classList.add('selected');
  });
 }
@@ -548,7 +558,7 @@ function saveProfile(){
  profile.birth=$('birth').value;
  profile.education=$('education').value;
 
- if(!profile.name||!profile.sex||!profile.birth||!profile.education||!profile.device){
+ if(!profile.name||!profile.sex||!profile.birth||!profile.education||!profile.device||!profile.handedness){
   $('profile-error').textContent='Completa tots els camps abans de continuar.';
   return;
  }
@@ -588,6 +598,7 @@ function loadSelectedUser(){
  if(!u)return;
  currentUserId=id;
  Object.assign(profile,u.profile);
+ profile.handedness=u.profile.handedness||'';
  data.mental=[];
  data.estimate=[];
  data.line=[];
@@ -608,7 +619,7 @@ function switchUser(){
 function renderProfileSummary(){
  const u=users.find(x=>x.id===currentUserId);
  if(!u)return;
- $('profile-summary').textContent=`Usuari: ${u.profile.name} · Sexe: ${u.profile.sex} · Naixement: ${u.profile.birth} · Estudis: ${u.profile.education} · Dispositiu: ${u.profile.device}`;
+ $('profile-summary').textContent=`Usuari: ${u.profile.name} · Sexe: ${u.profile.sex} · Naixement: ${u.profile.birth} · Estudis: ${u.profile.education} · Dominància manual: ${u.profile.handedness||'No especificada'} · Dispositiu: ${u.profile.device}`;
 }
 
 function toHub(){
@@ -700,15 +711,13 @@ function makeMental(){
   {a:3,b:3,label:'3+3'}
  ];
  const range=n=>n===1?[1,9]:n===2?[10,99]:[100,999];
- // Cinc sumes per categoria, en ordre de dificultat.
  for(const c of addCategories){
   const [amin,amax]=range(c.a),[bmin,bmax]=range(c.b);
   for(let i=0;i<5;i++){
    const x=rand(amin,amax),y=rand(bmin,bmax);
-   sums.push({op:'+',kind:'Suma',x,y,answer:x+y,cat:`Suma_${c.label}`,categoryLabel:c.label,phase:'suma'});
+   sums.push({op:'+',kind:'Suma',phase:'suma',x,y,answer:x+y,cat:`Suma_${c.label}`,categoryLabel:c.label});
   }
  }
- // Les restes van després de totes les sumes. El primer operand és més gran.
  const subCategories=[
   {a:1,b:1,label:'1-1',requested:'1+1'},
   {a:2,b:1,label:'2-1',requested:'1+2'},
@@ -721,7 +730,7 @@ function makeMental(){
   for(let i=0;i<5;i++){
    let x,y;
    do{x=rand(amin,amax);y=rand(bmin,bmax)}while(x<=y);
-   subtractions.push({op:'−',kind:'Resta',x,y,answer:x-y,cat:`Resta_${c.label}`,categoryLabel:c.label,requestedCategory:c.requested,phase:'resta'});
+   subtractions.push({op:'−',kind:'Resta',phase:'resta',x,y,answer:x-y,cat:`Resta_${c.label}`,categoryLabel:c.label,requestedCategory:c.requested});
   }
  }
  return sums.concat(subtractions);
@@ -731,7 +740,6 @@ function startMental(){
  mTrials=makeMental();
  mi=0;
  mConsecutiveErrors=0;
- mSumSkipped=false;
  data.mental=[];
  startRun('mental');
  showScreen('mentalIntro');
@@ -790,15 +798,12 @@ function submitMental(){
  saveRunProgress('mental');
  mi++;
  if(t.phase==='suma'&&mConsecutiveErrors>=3){
-  // Tres errors seguits en sumes: saltar directament a la primera resta.
   mi=25;
-  mSumSkipped=true;
   mConsecutiveErrors=0;
  }else if(t.phase==='resta'&&mConsecutiveErrors>=3){
   done('Càlcul mental finalitzat',`La prova s’ha aturat després de tres errors consecutius en les restes. Operacions respostes: ${data.mental.length}. Encerts: ${data.mental.filter(x=>x.correct).length}.`);
   return;
  }else if(t.phase==='suma'&&mi===25){
-  // La ratxa d'errors de les sumes no passa a la secció de restes.
   mConsecutiveErrors=0;
  }
  renderMental();
@@ -1149,7 +1154,6 @@ function answerComparison(side){
  feedback.style.display='flex';
  $('cnote').textContent=correct?'Correcte.':'Incorrecte.';
  comparisonTrialIndex++;
- // Mantenim els estímuls visibles durant un segon mentre es mostra el feedback.
  if(comparisonNextTimer)clearTimeout(comparisonNextTimer);
  comparisonNextTimer=setTimeout(()=>{
   comparisonNextTimer=null;
@@ -1199,6 +1203,7 @@ function rowsForRun(u,run){
   DataNaixement:p.birth,
   NivellEstudis:p.education,
   Dispositiu:p.device,
+  DominanciaManual:p.handedness||'',
   IDProva:run.id,
   DataInici:run.startedAt,
   DataFinal:run.completedAt||'',
@@ -1378,4 +1383,3 @@ window.addEventListener('DOMContentLoaded',()=>{
 </script>
 </body>
 </html>
-
