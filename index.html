@@ -61,15 +61,14 @@ input,select{width:100%;padding:13px;border:2px solid #e8edf3;border-radius:10px
 .dots{width:100%;height:245px;min-height:220px;position:relative;overflow:hidden;border:1px solid #eef2f7;border-radius:13px;background:#f8fafc}
 .dot{position:absolute;width:13px;height:13px;background:#2563eb;border-radius:50%}
 .dots.hidden .dot{display:none}
-.comparison-pair{display:grid;grid-template-columns:1fr 1fr;gap:14px;align-items:stretch;margin:18px 0}
-.comparison-side{border:2px solid var(--line);border-radius:14px;padding:14px;background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;min-width:0}
-.comparison-number{font-size:clamp(54px,10vw,90px);font-weight:900;color:#0f172a;line-height:1.2;min-height:110px;display:flex;align-items:center;justify-content:center}
-.dot-field{width:min(100%,190px);aspect-ratio:1/1;background:#888;border-radius:5px;position:relative;overflow:hidden}
-.dot-stimulus{position:absolute;border-radius:50%;width:16px;height:16px}
-.comparison-side .btn{width:100%;margin-top:14px}
-.comparison-caption{font-size:12px;color:var(--muted);font-weight:800;margin-bottom:8px}
-.comparison-note{font-size:13px;color:var(--muted);text-align:center}
-@media(max-width:520px){.comparison-pair{gap:8px}.comparison-side{padding:8px}.dot-field{width:100%}.comparison-side .btn{padding:10px 5px;font-size:12px}}
+.compare-pair{display:grid;grid-template-columns:1fr 1fr;gap:18px;max-width:620px;margin:18px auto;width:100%}
+.compare-side{min-height:210px;border:2px solid var(--line);border-radius:14px;background:#f8fafc;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
+.compare-number{font-size:clamp(64px,12vw,100px);font-weight:900;color:#0f172a}
+.compare-dots{width:100%;height:100%;min-height:210px;position:relative}
+.compare-dot{position:absolute;width:13px;height:13px;background:#111;border-radius:50%}
+.compare-actions{display:flex;gap:12px;max-width:620px;margin:18px auto}
+.compare-actions .btn{flex:1}
+@media(max-width:520px){.compare-pair{gap:8px}.compare-side{min-height:170px}.compare-dots{min-height:170px}.compare-actions{gap:8px}.compare-actions .btn{padding:12px 7px;font-size:13px}}
 .history-item{border:1px solid var(--line);border-radius:12px;padding:15px;margin:10px 0;background:#fff}
 .history-item h3{margin:0 0 5px}
 .history-meta{font-size:12px;color:var(--muted);margin-bottom:10px}
@@ -143,11 +142,6 @@ footer{text-align:center;color:#94a3b8;font-size:12px;padding:20px}
    <div class="symbol">〰️</div>
    <h3>Recta numèrica</h3>
    <p>10 nombres: cinc per sota de 50 i cinc per sobre de 50.</p>
-  </div>
-  <div class="module">
-   <div class="symbol">⚖️</div>
-   <h3>Comparació numèrica</h3>
-   <p>Comparació de nombres aràbics i conjunts de punts, basada en Krajcsi et al. (2018).</p>
   </div>
  </div>
 </section>
@@ -240,7 +234,7 @@ footer{text-align:center;color:#94a3b8;font-size:12px;padding:20px}
   <div class="module">
    <div class="symbol">⚖️</div>
    <h3>Comparació numèrica</h3>
-   <p>Comparació simbòlica (1–9) i no simbòlica (5–45 punts), amb 720 assaigs per condició.</p>
+   <p>Comparació simbòlica de nombres i comparació no simbòlica de conjunts de punts.</p>
    <div class="status" id="cs">Pendent</div>
    <button class="btn" onclick="startComparison()">Iniciar mòdul</button>
   </div>
@@ -357,12 +351,10 @@ footer{text-align:center;color:#94a3b8;font-size:12px;padding:20px}
  <div class="card">
   <div class="topline"><span>COMPARACIÓ NUMÈRICA</span><span>INSTRUCCIONS</span></div>
   <div class="instructions">
-   <h2>Quin costat té més quantitat?</h2>
-   <p>En una part de la prova veuràs dos nombres. En l’altra, dos conjunts de punts.</p>
-   <p>Prem la fletxa esquerra o dreta del teclat, o el botó corresponent, per indicar quin costat representa el nombre més gran o conté més punts. Respon tan ràpidament i amb la màxima precisió possible.</p>
-   <p>Els estímuls romandran a la pantalla fins que responguis. Entre assaigs hi haurà una pantalla en blanc de 500 ms.</p>
-   <p><strong>La prova completa consta de dues condicions de 720 assaigs cadascuna (1.440 en total). És una tasca llarga.</strong></p>
-   <p class="comparison-note">L’ordre de les dues condicions s’alterna entre execucions del mateix participant.</p>
+   <h2>Abans de començar</h2>
+   <p>En aquesta prova hauràs de decidir quin costat representa una quantitat més gran.</p>
+   <p>Primer compararàs nombres escrits amb xifres. Després compararàs conjunts de punts. Respon tan ràpid i correctament com puguis.</p>
+   <p><strong>La prova consta de dues parts. En total són 72 comparacions.</strong></p>
   </div>
   <div class="test-actions"><button class="btn" onclick="beginComparison()">COMENÇAR</button></div>
  </div>
@@ -370,34 +362,18 @@ footer{text-align:center;color:#94a3b8;font-size:12px;padding:20px}
 
 <section id="comparison" class="screen">
  <div class="card">
-  <div class="topline"><span id="comparison-condition">COMPARACIÓ SIMBÒLICA</span><span id="ccount">1 / 720</span></div>
-  <div class="progress"><div id="cp"></div></div>
-  <p class="comparison-note" id="comparison-instruction">Selecciona el nombre més gran.</p>
-  <div class="comparison-pair">
-   <div class="comparison-side">
-    <div class="comparison-caption">ESQUERRA</div>
-    <div id="c-left" class="comparison-number">1</div>
-    <button class="btn" onclick="answerComparison('left')">ESQUERRA</button>
-   </div>
-   <div class="comparison-side">
-    <div class="comparison-caption">DRETA</div>
-    <div id="c-right" class="comparison-number">2</div>
-    <button class="btn" onclick="answerComparison('right')">DRETA</button>
-   </div>
+  <div class="topline"><span id="compare-condition">COMPARACIÓ SIMBÒLICA</span><span id="compare-count">1 / 72</span></div>
+  <div class="progress"><div id="compare-progress"></div></div>
+  <p class="note" id="compare-instruction">Quin nombre és més gran?</p>
+  <div class="compare-pair">
+   <div class="compare-side" id="compare-left"><div class="compare-number" id="compare-left-number">2</div><div class="compare-dots" id="compare-left-dots" style="display:none"></div></div>
+   <div class="compare-side" id="compare-right"><div class="compare-number" id="compare-right-number">7</div><div class="compare-dots" id="compare-right-dots" style="display:none"></div></div>
   </div>
-  <p class="comparison-note">Tria el costat amb el valor més gran.</p>
- </div>
-</section>
-
-<section id="comparisonBreak" class="screen">
- <div class="card">
-  <div class="topline"><span>COMPARACIÓ NUMÈRICA</span><span>PAUSA ENTRE BLOCS</span></div>
-  <div class="instructions">
-   <h2>Primer bloc completat</h2>
-   <p>Has acabat una de les dues condicions. Pots fer una pausa breu abans de continuar.</p>
-   <p id="comparison-next-label"><strong>El bloc següent serà la comparació de punts.</strong></p>
+  <div class="compare-actions">
+   <button class="btn secondary" id="compare-left-button" onclick="answerComparison('left')">Esquerra</button>
+   <button class="btn secondary" id="compare-right-button" onclick="answerComparison('right')">Dreta</button>
   </div>
-  <div class="test-actions"><button class="btn" onclick="beginComparisonSecondBlock()">CONTINUAR</button></div>
+  <p class="note" id="compare-note">Selecciona el costat que representa la quantitat més gran.</p>
  </div>
 </section>
 
@@ -451,7 +427,7 @@ let selectedRunId=null;
 let mTrials=[],mi=0,mStart=0,mStopTime=null;
 let eTrials=[],ei=0,eStart=0,eStopTime=null;
 let lTrials=[],li=0,lStart=0,lineReady=false;
-let cTrials=[],ci=0,cStart=0,cReady=false,cOrder=[],cBlock=0,cDelay=null;
+let cTrials=[],ci=0,cStart=0,cCondition='symbolic';
 let doneTimer=null,lineNextTimer=null;
 
 const $=id=>document.getElementById(id);
@@ -612,7 +588,7 @@ function updateStatus(){
  $('ms').textContent=latest('mental')?`Última prova: ${latest('mental').status==='completed'?'Completada':'Incompleta'}`:'Cap prova desada';
  $('es').textContent=latest('estimate')?`Última prova: ${latest('estimate').status==='completed'?'Completada':'Incompleta'}`:'Cap prova desada';
  $('ls').textContent=latest('line')?`Última prova: ${latest('line').status==='completed'?'Completada':'Incompleta'}`:'Cap prova desada';
- $('cs').textContent=latest('comparison')?`Última prova: ${latest('comparison').status==='completed'?'Completada':'Incompleta'} · ${(latest('comparison').results||[]).length} assaigs`:'Cap prova desada';
+ $('cs').textContent=latest('comparison')?`Última prova: ${latest('comparison').status==='completed'?'Completada':'Incompleta'}`:'Cap prova desada';
 }
 
 function startRun(module){
@@ -858,6 +834,7 @@ $('eanswer').addEventListener('input',stopEstimateClock);
 function submitEstimate(){
  if($('esubmit').disabled)return;
  $('esubmit').disabled=true;
+
  let raw=$('eanswer').value;
  if(raw.trim()===''||!Number.isFinite(Number(raw))||Number(raw)<0){
   $('enote').textContent='Introdueix una quantitat vàlida.';
@@ -920,6 +897,7 @@ function startLine(){
 }
 
 function renderLine(){
+
  if(li>=10){
   done('Recta numèrica completada','Has completat els 10 estímuls. S’han registrat la resposta, l’error absolut i el temps de resposta.');
   return;
@@ -953,135 +931,109 @@ $('linehit').addEventListener('pointerdown',e=>{
  lineNextTimer=setTimeout(()=>{lineNextTimer=null;renderLine()},1100);
 });
 
-/* COMPARACIÓ NUMÈRICA: adaptació del paradigma de Krajcsi et al. (2018) */
+/* COMPARACIÓ NUMÈRICA: tasca adaptada amb una condició simbòlica i una de no simbòlica.
+   S'utilitzen totes les parelles ordenades no iguals de l'1 al 9 (36 per condició). */
 
-function makeComparisonBlock(condition){
- const pairs=[];
+function makeComparisonTrials(){
+ const symbolic=[],nonsymbolic=[];
  for(let left=1;left<=9;left++){
   for(let right=1;right<=9;right++){
    if(left===right)continue;
-   for(let repetition=0;repetition<10;repetition++){
-    const scale=condition==='dots'?5:1;
-    const leftValue=left*scale,rightValue=right*scale;
-    pairs.push({
-     condition,
-     leftBase:left,rightBase:right,
-     leftValue,rightValue,
-     correctSide:leftValue>rightValue?'left':'right',
-     distance:Math.abs(left-right),
-     largerBase:Math.max(left,right),
-     ratio:Math.min(left,right)/Math.max(left,right),
-     repetition:repetition+1
-    });
-   }
+   symbolic.push({condition:'symbolic',left,right,larger:left>right?'left':'right',distance:Math.abs(left-right),ratio:Math.min(left,right)/Math.max(left,right)});
+   nonsymbolic.push({condition:'nonsymbolic',left,right,larger:left>right?'left':'right',distance:Math.abs(left-right),ratio:Math.min(left,right)/Math.max(left,right)});
   }
  }
- return shuffle(pairs);
+ return shuffle(symbolic).concat(shuffle(nonsymbolic));
 }
 
 function startComparison(){
+ cTrials=makeComparisonTrials();
+ ci=0;
+ cCondition='symbolic';
+ data.comparison=[];
+ startRun('comparison');
  showScreen('comparisonIntro');
 }
 
 function beginComparison(){
- const u=users.find(x=>x.id===currentUserId);
- if(!u){alert('Carrega el perfil d’un usuari abans de començar.');showScreen('home');return;}
- if(!Array.isArray(u.comparisonOrder)){
-  const assigned=users.map(x=>x.comparisonOrder).filter(Array.isArray);
-  const symbolicFirst=assigned.filter(x=>x[0]==='symbolic').length;
-  const dotsFirst=assigned.filter(x=>x[0]==='dots').length;
-  u.comparisonOrder=symbolicFirst<=dotsFirst?['symbolic','dots']:['dots','symbolic'];
-  persistUsers();
- }
- cOrder=u.comparisonOrder.slice();
- cBlock=0;ci=0;cReady=false;
- cTrials=makeComparisonBlock(cOrder[cBlock]);
- data.comparison=[];
- startRun('comparison');
+ showScreen('comparison');
  renderComparison();
 }
 
-function beginComparisonSecondBlock(){
- cBlock=1;ci=0;cReady=false;
- cTrials=makeComparisonBlock(cOrder[cBlock]);
- renderComparison();
-}
-
-function makeDotField(count){
- const dots=[];
+function drawComparisonDots(container,count){
+ container.innerHTML='';
+ const w=Math.max(120,container.clientWidth||260);
+ const h=Math.max(150,container.clientHeight||210);
+ const placed=[];
  for(let i=0;i<count;i++){
-  const x=rand(2,96),y=rand(2,96);
-  const color=Math.random()<0.5?'#111':'#f7f7f7';
-  dots.push(`<span class="dot-stimulus" style="left:${x}%;top:${y}%;background:${color}"></span>`);
+  let x,y,tries=0;
+  do{
+   x=rand(8,Math.max(9,w-22));
+   y=rand(8,Math.max(9,h-22));
+   tries++;
+  }while(tries<120&&placed.some(p=>Math.hypot(p.x-x,p.y-y)<16));
+  placed.push({x,y});
+  const dot=document.createElement('i');
+  dot.className='compare-dot';
+  dot.style.left=x+'px';
+  dot.style.top=y+'px';
+  container.appendChild(dot);
  }
- return `<div class="dot-field" aria-label="Conjunt de ${count} punts">${dots.join('')}</div>`;
 }
 
 function renderComparison(){
- if(ci>=720){
-  cReady=false;
-  if(cBlock===0){
-   const next=cOrder[1]==='dots'?'punts':'nombres';
-   $('comparison-next-label').innerHTML=`<strong>El bloc següent serà la comparació de ${next}.</strong>`;
-   showScreen('comparisonBreak');
-  }else{
-   done('Comparació numèrica completada','Has completat les dues condicions (1.440 assaigs). S’han desat la resposta, l’encert i el temps de resposta de cada assaig.');
-  }
+ if(ci>=cTrials.length){
+  done('Comparació numèrica completada','Has completat les 72 comparacions. S’han registrat l’encert, el temps de resposta, la distància i la proporció entre quantitats.');
   return;
  }
  const t=cTrials[ci];
- const isDots=t.condition==='dots';
- $('comparison-condition').textContent=isDots?'COMPARACIÓ NO SIMBÒLICA':'COMPARACIÓ SIMBÒLICA';
- $('comparison-instruction').textContent=isDots?'Selecciona el costat amb més punts.':'Selecciona el nombre més gran.';
- $('ccount').textContent=`${ci+1} / 720 · Bloc ${cBlock+1}/2`;
- $('cp').style.width=`${ci/720*100}%`;
- if(isDots){
-  $('c-left').className='';$('c-right').className='';
-  $('c-left').innerHTML=makeDotField(t.leftValue);
-  $('c-right').innerHTML=makeDotField(t.rightValue);
+ cCondition=t.condition;
+ const symbolic=t.condition==='symbolic';
+ $('compare-condition').textContent=symbolic?'COMPARACIÓ SIMBÒLICA':'COMPARACIÓ NO SIMBÒLICA';
+ $('compare-instruction').textContent=symbolic?'Quin nombre escrit és més gran?':'Quin conjunt conté més punts?';
+ $('compare-count').textContent=`${ci+1} / ${cTrials.length}`;
+ $('compare-progress').style.width=`${ci/cTrials.length*100}%`;
+ $('compare-note').textContent='Selecciona el costat que representa la quantitat més gran.';
+ $('compare-left-button').disabled=false;
+ $('compare-right-button').disabled=false;
+ $('compare-left-number').style.display=symbolic?'block':'none';
+ $('compare-right-number').style.display=symbolic?'block':'none';
+ $('compare-left-dots').style.display=symbolic?'none':'block';
+ $('compare-right-dots').style.display=symbolic?'none':'block';
+ if(symbolic){
+  $('compare-left-number').textContent=t.left;
+  $('compare-right-number').textContent=t.right;
  }else{
-  $('c-left').className='comparison-number';$('c-right').className='comparison-number';
-  $('c-left').textContent=t.leftValue;$('c-right').textContent=t.rightValue;
+  drawComparisonDots($('compare-left-dots'),t.left);
+  drawComparisonDots($('compare-right-dots'),t.right);
  }
- cReady=true;
  cStart=performance.now();
 }
 
 function answerComparison(side){
- if(!cReady)return;
- cReady=false;
+ if(!cTrials[ci])return;
  const t=cTrials[ci];
- const rt=Math.round(performance.now()-cStart);
- const correct=side===t.correctSide;
+ const elapsed=Math.round(performance.now()-cStart);
+ const correct=side===t.larger;
  data.comparison.push({
+  trial:ci+1,
   condition:t.condition,
-  block:cBlock+1,
-  trialInBlock:ci+1,
-  repetition:t.repetition,
-  leftValue:t.leftValue,
-  rightValue:t.rightValue,
-  leftBase:t.leftBase,
-  rightBase:t.rightBase,
+  leftValue:t.left,
+  rightValue:t.right,
   response:side,
-  correctSide:t.correctSide,
+  correctSide:t.larger,
   correct,
-  distance:t.distance,
-  largerValue:t.largerBase,
-  ratio:Number(t.ratio.toFixed(4)),
-  reactionTimeMs:rt
+  numericalDistance:t.distance,
+  numericalRatio:Number(t.ratio.toFixed(4)),
+  timeMs:elapsed
  });
+ $('compare-left-button').disabled=true;
+ $('compare-right-button').disabled=true;
+ $('compare-note').textContent=correct?'Correcte.':'Incorrecte.';
  saveRunProgress('comparison');
  ci++;
- $('c-left').innerHTML='';$('c-right').innerHTML='';
- if(cDelay)clearTimeout(cDelay);
- cDelay=setTimeout(()=>{cDelay=null;renderComparison()},500);
+ setTimeout(renderComparison,250);
 }
-
-document.addEventListener('keydown',e=>{
- if(!cReady||!$('comparison')?.classList.contains('active'))return;
- if(e.key==='ArrowLeft'){e.preventDefault();answerComparison('left');}
- else if(e.key==='ArrowRight'){e.preventDefault();answerComparison('right');}
-});
 
 /* HISTORIAL, RESULTATS I EXPORTACIÓ */
 
