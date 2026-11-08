@@ -68,8 +68,7 @@ input,select{width:100%;padding:13px;border:2px solid #e8edf3;border-radius:10px
 .comparison-digit{font-size:clamp(64px,12vw,100px);font-weight:850;color:#0f172a;line-height:1}
 .dotfield{width:min(100%,220px);aspect-ratio:1/1;position:relative;overflow:hidden;background:#aeb4bb;border-radius:3px}
 .comp-dot{position:absolute;width:8px;height:8px;border-radius:50%;transform:translate(-50%,-50%)}
-.comp-dot.black{background:#111}
-.comp-dot.white{background:#fff}
+.comp-dot{background:#2563eb}
 .comparison-responses{display:grid;grid-template-columns:1fr 1fr;gap:12px;max-width:560px;margin:18px auto 0}
 .comparison-responses .btn{min-height:58px}
 .comparison-instruction{font-size:15px;color:var(--muted);text-align:center;line-height:1.5}
@@ -257,7 +256,7 @@ footer{text-align:center;color:#94a3b8;font-size:12px;padding:20px}
   <div class="module">
    <div class="symbol">↔️</div>
    <h3>Comparació de magnituds</h3>
-   <p>288 assaigs: 144 amb nombres i 144 amb conjunts de punts.</p>
+   <p>144 assaigs: 72 amb nombres i 72 amb conjunts de punts.</p>
    <div class="status" id="cs">Pendent</div>
    <button class="btn" onclick="startComparison()">Iniciar mòdul</button>
   </div>
@@ -381,7 +380,7 @@ footer{text-align:center;color:#94a3b8;font-size:12px;padding:20px}
    <p>Primer compararàs parelles de nombres escrits. Després compararàs parelles de conjunts de punts.</p>
    <p>En cada assaig, selecciona el costat que conté el valor més gran. Respon tan ràpidament i amb tanta precisió com puguis.</p>
    <p><strong>Després de cada resposta, la pantalla quedarà blanca i hi apareixerà una creu negra durant un segon.</strong></p>
-   <p class="comparison-instruction">La tasca conté 288 assaigs (144 per condició): les 72 parelles ordenades de nombres de l’1 al 9, amb dues repeticions. En la condició de punts, els valors es multipliquen per cinc (5–45) per evitar la subitització. L’estudi original feia deu repeticions per parella; aquesta és una versió abreujada. Pots respondre amb les fletxes esquerra/dreta o amb els botons. L’ordre de les condicions s’alterna entre participants. La mida visual dels punts és una aproximació en píxels: la pantalla no està calibrada en graus visuals. </p>
+   <p class="comparison-instruction">La tasca conté 144 assaigs (72 per condició): les 72 parelles ordenades de nombres de l’1 al 9, una sola vegada en cada condició. En la condició de punts, els valors es multipliquen per cinc (5–45) per evitar la subitització. Pots respondre amb les fletxes esquerra/dreta o amb els botons. L’ordre de les condicions s’alterna entre participants. La mida visual dels punts és una aproximació en píxels: la pantalla no està calibrada en graus visuals. </p>
   </div>
   <div class="test-actions"><button class="btn" onclick="beginComparison()">COMENÇAR</button></div>
  </div>
@@ -401,7 +400,7 @@ footer{text-align:center;color:#94a3b8;font-size:12px;padding:20px}
 
 <section id="comparison" class="screen">
  <div class="card">
-  <div class="topline"><span>COMPARACIÓ DE MAGNITUDS</span><span id="cc">1 / 288</span></div>
+  <div class="topline"><span>COMPARACIÓ DE MAGNITUDS</span><span id="cc">1 / 144</span></div>
   <div class="progress"><div id="cp"></div></div>
   <div class="center"><span class="pill" id="ccondition">NOMBRES ESCRITS</span></div>
   <p class="comparison-instruction" id="cquestion">Quin nombre és més gran?</p>
@@ -1001,13 +1000,13 @@ $('linehit').addEventListener('pointerdown',e=>{
 /* COMPARACIÓ DE MAGNITUDS: ADAPTACIÓ DE KRAJCSI ET AL. (2018) */
 
 // Les 9 x 8 parelles ordenades de nombres 1-9 (s'exclouen els empats).
-// Dues repeticions per parella: 144 assaigs per condició, 288 en total.
+// Una sola presentació per parella: 72 assaigs per condició, 144 en total.
 function makeComparisonBlock(condition){
  const trials=[];
  for(let left=1;left<=9;left++){
   for(let right=1;right<=9;right++){
    if(left===right)continue;
-   for(let rep=1;rep<=2;rep++){
+   for(let rep=1;rep<=1;rep++){
     trials.push({
      condition,
      repetition:rep,
@@ -1037,7 +1036,7 @@ function startComparison(){
  comparisonTrialIndex=0;
  data.comparison=[];
  startRun('comparison');
- if(activeRun){activeRun.conditionOrder=comparisonOrder.slice();activeRun.trialsPerCondition=144;activeRun.totalTrials=288;persistUsers()}
+ if(activeRun){activeRun.conditionOrder=comparisonOrder.slice();activeRun.trialsPerCondition=72;activeRun.totalTrials=144;persistUsers()}
  showScreen('comparisonIntro');
 }
 
@@ -1059,7 +1058,7 @@ function renderComparisonTrial(){
  $('comparison-mask').classList.remove('visible');
  if(comparisonBlockIndex>=2){
   const summary=comparisonSummary();
-  done('Comparació de magnituds completada',`Has completat els 288 assaigs. Nombres: ${summary.symbolic.accuracy}% d'encerts i ${summary.symbolic.meanRT} ms de temps mitjà en respostes correctes. Punts: ${summary.dots.accuracy}% d'encerts i ${summary.dots.meanRT} ms de temps mitjà en respostes correctes.`);
+  done('Comparació de magnituds completada',`Has completat els 144 assaigs. Nombres: ${summary.symbolic.accuracy}% d'encerts i ${summary.symbolic.meanRT} ms de temps mitjà en respostes correctes. Punts: ${summary.dots.accuracy}% d'encerts i ${summary.dots.meanRT} ms de temps mitjà en respostes correctes.`);
   return;
  }
  const block=comparisonBlocks[comparisonBlockIndex];
@@ -1079,8 +1078,8 @@ function renderComparisonTrial(){
  feedback.textContent='';
  $('cnote').className='note';
  const totalTrial=data.comparison.length+1;
- $('cc').textContent=`${totalTrial} / 288`;
- $('cp').style.width=`${(data.comparison.length/288)*100}%`;
+ $('cc').textContent=`${totalTrial} / 144`;
+ $('cp').style.width=`${(data.comparison.length/144)*100}%`;
  $('ccondition').textContent=t.condition==='symbolic'?'NOMBRES ESCRITS':'CONJUNTS DE PUNTS';
  $('cquestion').textContent=t.condition==='symbolic'?'Quin nombre és més gran?':'Quin conjunt conté més punts?';
  $('cnote').textContent='Respon tan ràpidament i amb tanta precisió com puguis.';
@@ -1119,7 +1118,7 @@ function makeDotField(count){
  }
  points.forEach((p,i)=>{
   const dot=document.createElement('i');
-  dot.className=`comp-dot ${Math.random()<0.5?'black':'white'}`;
+  dot.className='comp-dot';
   dot.style.left=`${p.x/box*100}%`;
   dot.style.top=`${p.y/box*100}%`;
   field.appendChild(dot);
