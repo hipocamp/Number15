@@ -68,6 +68,9 @@ input,select{width:100%;padding:13px;border:2px solid #e8edf3;border-radius:10px
 .compare-dot{position:absolute;width:13px;height:13px;background:#111;border-radius:50%}
 .compare-actions{display:flex;gap:12px;max-width:620px;margin:18px auto}
 .compare-actions .btn{flex:1}
+.exit-row{display:flex;justify-content:flex-end;margin-bottom:10px}
+.exit-btn{background:#f1f5f9;color:#475569;border:1px solid #dbe3ec;border-radius:9px;padding:8px 12px;font-size:12px;font-weight:750}
+.exit-btn:hover{background:#e2e8f0}
 @media(max-width:520px){.compare-pair{gap:8px}.compare-side{min-height:170px}.compare-dots{min-height:170px}.compare-actions{gap:8px}.compare-actions .btn{padding:12px 7px;font-size:13px}}
 .history-item{border:1px solid var(--line);border-radius:12px;padding:15px;margin:10px 0;background:#fff}
 .history-item h3{margin:0 0 5px}
@@ -89,6 +92,7 @@ footer{text-align:center;color:#94a3b8;font-size:12px;padding:20px}
 }
 </style>
 </head>
+
 <body>
 <header>
  <div class="head">
@@ -97,14 +101,18 @@ footer{text-align:center;color:#94a3b8;font-size:12px;padding:20px}
   <p>Avaluació de competències numèriques</p>
  </div>
 </header>
+
 <main>
+
 <section id="home" class="screen active">
  <div class="card">
   <h2>Benvingut/da a NUMBER15</h2>
   <p class="intro">Selecciona un alumne ja registrat o crea un usuari nou. Les proves i els seus resultats quedaran guardats per alumne.</p>
   <div class="field">
    <label>Usuaris guardats</label>
-   <select id="user-select"><option value="">Selecciona un usuari...</option></select>
+   <select id="user-select">
+    <option value="">Selecciona un usuari...</option>
+   </select>
   </div>
   <div class="btnrow">
    <button class="btn" onclick="loadSelectedUser()">Carregar usuari</button>
@@ -116,30 +124,79 @@ footer{text-align:center;color:#94a3b8;font-size:12px;padding:20px}
    <input type="file" id="restore-file" accept="application/json" onchange="restoreUsers(event)">
   </div>
  </div>
+
  <div class="grid">
-  <div class="module"><div class="symbol">👤</div><h3>Dades personals</h3><p>Identificació i característiques de la sessió.</p></div>
-  <div class="module"><div class="symbol">➕</div><h3>Càlcul mental</h3><p>50 sumes i restes amb operands d’1, 2 i 3 dígits.</p></div>
-  <div class="module"><div class="symbol">🔵</div><h3>Estimació</h3><p>25 estímuls de boletes blaves, exposats 500 ms.</p></div>
-  <div class="module"><div class="symbol">〰️</div><h3>Recta numèrica</h3><p>10 nombres: cinc per sota de 50 i cinc per sobre de 50.</p></div>
+  <div class="module">
+   <div class="symbol">👤</div>
+   <h3>Dades personals</h3>
+   <p>Identificació i característiques de la sessió.</p>
+  </div>
+  <div class="module">
+   <div class="symbol">➕</div>
+   <h3>Càlcul mental</h3>
+   <p>50 sumes i restes amb operands d’1, 2 i 3 dígits.</p>
+  </div>
+  <div class="module">
+   <div class="symbol">🔵</div>
+   <h3>Estimació</h3>
+   <p>25 estímuls de boletes blaves, exposats 500 ms.</p>
+  </div>
+  <div class="module">
+   <div class="symbol">〰️</div>
+   <h3>Recta numèrica</h3>
+   <p>10 nombres: cinc per sota de 50 i cinc per sobre de 50.</p>
+  </div>
  </div>
 </section>
+
 <section id="profile" class="screen">
  <div class="card">
   <h2 id="profile-title">Nou usuari</h2>
   <p class="intro">Les dades quedaran desades per poder recuperar l’alumne en futures sessions.</p>
-  <div class="field"><label>Nom i cognoms / codi d’usuari</label><input id="user-name" type="text" autocomplete="off" placeholder="Identificador de l’alumne"></div>
   <div class="field">
-   <label>Sexe</label>
-   <div class="choices">
-    <button class="choice" data-sex="Masculí" onclick="pick(this,'sex')">Masculí</button>
-    <button class="choice" data-sex="Femení" onclick="pick(this,'sex')">Femení</button>
+   <label>Nom i cognoms / codi d’usuari</label>
+   <input id="user-name" type="text" autocomplete="off" placeholder="Identificador de l’alumne">
+  </div>
+  <div class="two">
+   <div class="field">
+    <label>Sexe</label>
+    <div class="choices">
+     <button type="button" class="choice" data-sex="Home" onclick="pick(this,'sex')">Home</button>
+     <button type="button" class="choice" data-sex="Dona" onclick="pick(this,'sex')">Dona</button>
+     <button type="button" class="choice" data-sex="No contesta" onclick="pick(this,'sex')">No contesta</button>
+    </div>
+   </div>
+   <div class="field">
+    <label>Dominància manual</label>
+    <div class="choices">
+     <button type="button" class="choice" data-dominance="Esquerrà" onclick="pick(this,'dominance')">Esquerrà</button>
+     <button type="button" class="choice" data-dominance="Dretà" onclick="pick(this,'dominance')">Dretà</button>
+     <button type="button" class="choice" data-dominance="Ambidextre" onclick="pick(this,'dominance')">Ambidextre</button>
+    </div>
    </div>
   </div>
   <div class="two">
-   <div class="field"><label>Data de naixement</label><input type="date" id="birth"></div>
-   <div class="field"><label>Nivell d'estudis</label><select id="education">
-    <option value="">Selecciona...</option><option>1r ESO</option><option>2n ESO</option><option>3r ESO</option><option>4t ESO</option><option>1r Batx</option><option>2n Batx</option><option>1r GM</option><option>2n GM</option><option>Universitari</option><option>Grau Superior</option><option>Graduat</option>
-   </select></div>
+   <div class="field">
+    <label>Data de naixement</label>
+    <input type="date" id="birth">
+   </div>
+   <div class="field">
+    <label>Nivell d'estudis</label>
+    <select id="education">
+     <option value="">Selecciona...</option>
+     <option>1r ESO</option>
+     <option>2n ESO</option>
+     <option>3r ESO</option>
+     <option>4t ESO</option>
+     <option>1r Batx</option>
+     <option>2n Batx</option>
+     <option>1r GM</option>
+     <option>2n GM</option>
+     <option>Universitari</option>
+     <option>Grau Superior</option>
+     <option>Graduat</option>
+    </select>
+   </div>
   </div>
   <div class="field">
    <label>Dispositiu</label>
@@ -153,6 +210,7 @@ footer{text-align:center;color:#94a3b8;font-size:12px;padding:20px}
   <p id="profile-error" class="note"></p>
  </div>
 </section>
+
 <section id="hub" class="screen">
  <div class="card">
   <h2>Panell d'avaluació</h2>
@@ -164,35 +222,85 @@ footer{text-align:center;color:#94a3b8;font-size:12px;padding:20px}
    <button class="btn secondary" onclick="switchUser()">Canviar d’usuari</button>
   </div>
  </div>
+
  <div class="grid">
-  <div class="module"><div class="symbol">➕</div><h3>Càlcul mental</h3><p>50 operacions en cinc combinacions de dígits.</p><div class="status" id="ms">Pendent</div><button class="btn" onclick="startMental()">Iniciar mòdul</button></div>
-  <div class="module"><div class="symbol">🔵</div><h3>Estimació</h3><p>25 estímuls amb exposició de 500 ms.</p><div class="status" id="es">Pendent</div><button class="btn" onclick="startEstimate()">Iniciar mòdul</button></div>
-  <div class="module"><div class="symbol">〰️</div><h3>Recta numèrica</h3><p>10 estímuls en una línia del 0 al 100.</p><div class="status" id="ls">Pendent</div><button class="btn" onclick="startLine()">Iniciar mòdul</button></div>
-  <div class="module"><div class="symbol">⚖️</div><h3>Comparació numèrica</h3><p>Comparació simbòlica de nombres i comparació no simbòlica de conjunts de punts.</p><div class="status" id="cs">Pendent</div><button class="btn" onclick="startComparison()">Iniciar mòdul</button></div>
+  <div class="module">
+   <div class="symbol">➕</div>
+   <h3>Càlcul mental</h3>
+   <p>50 operacions en cinc combinacions de dígits.</p>
+   <div class="status" id="ms">Pendent</div>
+   <button class="btn" onclick="startMental()">Iniciar mòdul</button>
+  </div>
+  <div class="module">
+   <div class="symbol">🔵</div>
+   <h3>Estimació</h3>
+   <p>25 estímuls amb exposició de 500 ms.</p>
+   <div class="status" id="es">Pendent</div>
+   <button class="btn" onclick="startEstimate()">Iniciar mòdul</button>
+  </div>
+  <div class="module">
+   <div class="symbol">〰️</div>
+   <h3>Recta numèrica</h3>
+   <p>10 estímuls en una línia del 0 al 100.</p>
+   <div class="status" id="ls">Pendent</div>
+   <button class="btn" onclick="startLine()">Iniciar mòdul</button>
+  </div>
+  <div class="module">
+   <div class="symbol">⚖️</div>
+   <h3>Comparació numèrica</h3>
+   <p>Comparació simbòlica de nombres i comparació no simbòlica de conjunts de punts.</p>
+   <div class="status" id="cs">Pendent</div>
+   <button class="btn" onclick="startComparison()">Iniciar mòdul</button>
+  </div>
  </div>
+
  <div class="card" style="margin-top:16px">
   <h3>Resultats</h3>
   <p class="note">Exporta un CSV amb una fila per estímul, les dades personals i els indicadors resumits del càlcul mental.</p>
-  <div class="btnrow"><button class="btn" onclick="downloadAllCSV()">Descarregar tots els resultats (CSV)</button><button class="btn secondary" onclick="backupUsers()">Còpia de seguretat</button></div>
+  <div class="btnrow">
+   <button class="btn" onclick="downloadAllCSV()">Descarregar tots els resultats (CSV)</button>
+   <button class="btn secondary" onclick="backupUsers()">Còpia de seguretat</button>
+  </div>
  </div>
 </section>
+
 <section id="mentalIntro" class="screen">
  <div class="card">
-  <div class="topline"><span>CÀLCUL MENTAL</span><span>INSTRUCCIONS</span></div>
-  <div class="instructions"><h2>Abans de començar</h2><p>Ara veuràs un conjunt de sumes i restes. Resol-les tan ràpid com puguis.</p><p><strong>Endavant!</strong></p></div>
-  <div class="test-actions"><button class="btn" onclick="beginMental()">COMENÇAR</button></div>
+  <div class="topline">
+   <span>CÀLCUL MENTAL</span>
+   <span>INSTRUCCIONS</span>
+  </div>
+  <div class="instructions">
+   <h2>Abans de començar</h2>
+   <p>Ara veuràs un conjunt de sumes i restes. Resol-les tan ràpid com puguis.</p>
+   <p><strong>Endavant!</strong></p>
+  </div>
+  <div class="test-actions">
+   <button class="btn" onclick="beginMental()">COMENÇAR</button>
+   <button class="exit-btn" style="width:100%;margin-top:10px" onclick="abortCurrentRun()">Tornar al menú i esborrar aquest intent</button>
+  </div>
  </div>
 </section>
+
 <section id="mental" class="screen">
  <div class="card">
-  <div class="topline"><span>CÀLCUL MENTAL</span><span id="mc">1 / 50</span></div>
+  <div class="exit-row"><button class="exit-btn" onclick="abortCurrentRun()">Tornar al menú i esborrar aquest intent</button></div>
+  <div class="topline">
+   <span>CÀLCUL MENTAL</span>
+   <span id="mc">1 / 50</span>
+  </div>
   <div class="progress"><div id="mp"></div></div>
   <div class="center"><span class="pill" id="mcat">SUMA · 2 DÍGITS</span></div>
   <div class="stage"><div class="operation" id="op">24 + 13 =</div></div>
-  <div class="answer"><label for="manswer">La teva resposta</label><input id="manswer" type="number" inputmode="numeric" placeholder="Escriu el resultat"><button class="btn" style="width:100%;margin-top:12px" onclick="submitMental()">Validar resposta</button></div>
+  <div class="answer">
+   <label for="manswer">La teva resposta</label>
+   <input id="manswer" type="number" inputmode="numeric" placeholder="Escriu el resultat">
+   <button class="btn" style="width:100%;margin-top:12px" onclick="submitMental()">Validar resposta</button>
+  </div>
   <p id="mnote" class="note">Respon tan ràpid i bé com puguis.</p>
  </div>
 </section>
+
 <section id="estimateIntro" class="screen">
  <div class="card">
   <div class="topline"><span>ESTIMACIÓ</span><span>INSTRUCCIONS</span></div>
@@ -200,35 +308,61 @@ footer{text-align:center;color:#94a3b8;font-size:12px;padding:20px}
    <h1 class="target" style="font-size:clamp(26px,5vw,38px)">ESTIMACIÓ</h1>
    <p class="intro">Ara veuràs breument un conjunt de punts blaus. Fes una estimació de quants en veus.</p>
   </div>
-  <div class="answer"><button class="btn" id="estartbutton" style="width:100%" onclick="beginEstimate()">COMENÇAR</button></div>
+  <div class="answer">
+   <button class="btn" id="estartbutton" style="width:100%" onclick="beginEstimate()">COMENÇAR</button>
+  </div>
  </div>
 </section>
+
 <section id="estimate" class="screen">
  <div class="card">
   <div class="topline"><span>ESTIMACIÓ</span><span id="ec">1 / 25</span></div>
   <div class="progress"><div id="ep"></div></div>
   <div class="center"><span class="pill" id="ecat" style="display:none"></span></div>
   <div class="stage"><div id="dots" class="dots"></div></div>
-  <div class="answer"><label for="eanswer">Quantes boletes has vist?</label><input id="eanswer" type="number" min="0" max="100" inputmode="numeric" placeholder="Escriu la quantitat"><button class="btn" id="esubmit" style="width:100%;margin-top:12px" onclick="submitEstimate()" disabled>Validar resposta</button></div>
+  <div class="answer">
+   <label for="eanswer">Quantes boletes has vist?</label>
+   <input id="eanswer" type="number" min="0" max="100" inputmode="numeric" placeholder="Escriu la quantitat">
+   <button class="btn" id="esubmit" style="width:100%;margin-top:12px" onclick="submitEstimate()" disabled>Validar resposta</button>
+  </div>
   <p id="enote" class="note">Les boletes apareixeran durant 500 mil·lisegons.</p>
  </div>
 </section>
+
 <section id="estimateNext" class="screen">
  <div class="card">
   <div class="topline"><span>ESTIMACIÓ</span><span id="enextcount">2 / 25</span></div>
-  <div class="stage" style="min-height:260px;flex-direction:column"><h1 class="target" style="font-size:clamp(48px,9vw,76px)">SEGÜENT</h1><p class="note">Prem el botó quan estiguis preparat/da per veure el següent estímul.</p></div>
-  <div class="answer"><button class="btn" id="enextbutton" style="width:100%" onclick="nextEstimate()">SEGÜENT</button></div>
+  <div class="stage" style="min-height:260px;flex-direction:column">
+   <h1 class="target" style="font-size:clamp(48px,9vw,76px)">SEGÜENT</h1>
+   <p class="note">Prem el botó quan estiguis preparat/da per veure el següent estímul.</p>
+  </div>
+  <div class="answer">
+   <button class="btn" id="enextbutton" style="width:100%" onclick="nextEstimate()">SEGÜENT</button>
+  </div>
  </div>
 </section>
+
 <section id="line" class="screen">
  <div class="card">
   <div class="topline"><span>RECTA NUMÈRICA</span><span id="lc">1 / 10</span></div>
   <div class="progress"><div id="lp"></div></div>
-  <div class="stage" style="min-height:150px;flex-direction:column"><span class="pill">UBICA EL NOMBRE</span><h1 class="target" id="ltarget" style="visibility:hidden">--</h1></div>
-  <div class="numberline"><div class="labels"><span>0</span><span>100</span></div><div class="linehit" id="linehit"><div class="bar"></div><div class="tick" style="left:0"></div><div class="tick" style="right:0"></div><div id="line-marker" class="response-marker" style="display:none;left:0%"></div></div></div>
+  <div class="stage" style="min-height:150px;flex-direction:column">
+   <span class="pill">UBICA EL NOMBRE</span>
+   <h1 class="target" id="ltarget" style="visibility:hidden">--</h1>
+  </div>
+  <div class="numberline">
+   <div class="labels"><span>0</span><span>100</span></div>
+   <div class="linehit" id="linehit">
+    <div class="bar"></div>
+    <div class="tick" style="left:0"></div>
+    <div class="tick" style="right:0"></div>
+    <div id="line-marker" class="response-marker" style="display:none;left:0%"></div>
+   </div>
+  </div>
   <p class="note">Toca o fes clic a la posició que consideris correcta.</p>
  </div>
 </section>
+
 <section id="comparisonIntro" class="screen">
  <div class="card">
   <div class="topline"><span>COMPARACIÓ NUMÈRICA</span><span>INSTRUCCIONS</span></div>
@@ -236,13 +370,19 @@ footer{text-align:center;color:#94a3b8;font-size:12px;padding:20px}
    <h2>Abans de començar</h2>
    <p>En aquesta prova hauràs de decidir quin costat representa una quantitat més gran.</p>
    <p>Primer compararàs nombres escrits amb xifres. Després compararàs conjunts de punts. Respon tan ràpid i correctament com puguis.</p>
+   <p><strong>En ordinador també pots respondre amb les fletxes: ← esquerra i → dreta.</strong></p>
    <p><strong>La prova consta de dues parts. En total són 72 comparacions.</strong></p>
   </div>
-  <div class="test-actions"><button class="btn" type="button" id="begin-comparison-button">COMENÇAR</button></div>
+  <div class="test-actions">
+   <button class="btn" type="button" id="begin-comparison-button">COMENÇAR</button>
+   <button class="exit-btn" style="width:100%;margin-top:10px" onclick="abortCurrentRun()">Tornar al menú i esborrar aquest intent</button>
+  </div>
  </div>
 </section>
+
 <section id="comparison" class="screen">
  <div class="card">
+  <div class="exit-row"><button class="exit-btn" onclick="abortCurrentRun()">Tornar al menú i esborrar aquest intent</button></div>
   <div class="topline"><span id="compare-condition">COMPARACIÓ SIMBÒLICA</span><span id="compare-count">1 / 72</span></div>
   <div class="progress"><div id="compare-progress"></div></div>
   <p class="note" id="compare-instruction">Quin nombre és més gran?</p>
@@ -250,33 +390,52 @@ footer{text-align:center;color:#94a3b8;font-size:12px;padding:20px}
    <div class="compare-side" id="compare-left"><div class="compare-number" id="compare-left-number">2</div><div class="compare-dots" id="compare-left-dots" style="display:none"></div></div>
    <div class="compare-side" id="compare-right"><div class="compare-number" id="compare-right-number">7</div><div class="compare-dots" id="compare-right-dots" style="display:none"></div></div>
   </div>
-  <div class="compare-actions"><button class="btn secondary" id="compare-left-button" onclick="answerComparison('left')">Esquerra</button><button class="btn secondary" id="compare-right-button" onclick="answerComparison('right')">Dreta</button></div>
+  <div class="compare-actions">
+   <button class="btn secondary" id="compare-left-button" onclick="answerComparison('left')">Esquerra</button>
+   <button class="btn secondary" id="compare-right-button" onclick="answerComparison('right')">Dreta</button>
+  </div>
   <p class="note" id="compare-note">Selecciona el costat que representa la quantitat més gran.</p>
  </div>
 </section>
+
 <section id="history" class="screen">
  <div class="card">
-  <h2>Historial de proves</h2><p id="history-user" class="intro"></p><div id="history-list"></div>
-  <div class="btnrow"><button class="btn secondary" onclick="toHub()">Tornar al panell</button><button class="btn" onclick="downloadAllCSV()">Exportar tots els resultats CSV</button></div>
+  <h2>Historial de proves</h2>
+  <p id="history-user" class="intro"></p>
+  <div id="history-list"></div>
+  <div class="btnrow">
+   <button class="btn secondary" onclick="toHub()">Tornar al panell</button>
+   <button class="btn" onclick="downloadAllCSV()">Exportar tots els resultats CSV</button>
+  </div>
  </div>
 </section>
+
 <section id="historyDetail" class="screen">
  <div class="card">
-  <h2 id="detail-title">Resultats de la prova</h2><p id="detail-meta" class="intro"></p><div id="detail-content" class="table-wrap"></div>
-  <div class="btnrow"><button class="btn" id="detail-export" onclick="exportSelectedRun()">Descarregar aquesta prova (CSV)</button><button class="btn secondary" onclick="showHistory()">Tornar a l’historial</button></div>
+  <h2 id="detail-title">Resultats de la prova</h2>
+  <p id="detail-meta" class="intro"></p>
+  <div id="detail-content" class="table-wrap"></div>
+  <div class="btnrow">
+   <button class="btn" id="detail-export" onclick="exportSelectedRun()">Descarregar aquesta prova (CSV)</button>
+   <button class="btn secondary" onclick="showHistory()">Tornar a l’historial</button>
+  </div>
  </div>
 </section>
+
 <section id="done" class="screen">
  <div class="card">
-  <h2 id="done-title">Mòdul completat</h2><p id="done-message" class="intro"></p>
-  <button class="btn" onclick="toHub()">Tornar al panell ara</button><button class="btn secondary" style="margin-left:7px" onclick="downloadAllCSV()">Descarregar resultats CSV</button>
+  <h2 id="done-title">Mòdul completat</h2>
+  <p id="done-message" class="intro"></p>
+  <button class="btn" onclick="toHub()">Tornar al panell ara</button>
+  <button class="btn secondary" style="margin-left:7px" onclick="downloadAllCSV()">Descarregar resultats CSV</button>
  </div>
 </section>
+
 </main>
 <footer>NUMBER15 · NeurekaLAB</footer>
 
 <script>
-const profile={name:'',sex:'',birth:'',education:'',device:''};
+const profile={name:'',sex:'',dominance:'',birth:'',education:'',device:''};
 const data={mental:[],estimate:[],line:[],comparison:[]};
 const STORAGE_KEY='number15_users_v3';
 
@@ -290,7 +449,7 @@ let mTrials=[],mi=0,mStart=0,mStopTime=null;
 let eTrials=[],ei=0,eStart=0,eStopTime=null;
 let lTrials=[],li=0,lStart=0,lineReady=false;
 let cTrials=[],ci=0,cStart=0,cCondition='symbolic';
-let doneTimer=null,lineNextTimer=null;
+let doneTimer=null,lineNextTimer=null,comparisonNextTimer=null,comparisonLocked=false;
 
 const $=id=>document.getElementById(id);
 const rand=(a,b)=>Math.floor(Math.random()*(b-a+1))+a;
@@ -304,9 +463,11 @@ function showScreen(id){
 }
 
 function pick(el,type){
- document.querySelectorAll(type==='sex'?'[data-sex]':'.choices button:not([data-sex])').forEach(x=>x.classList.remove('selected'));
+ const selector=type==='sex'?'[data-sex]':type==='dominance'?'[data-dominance]':'.choices button:not([data-sex]):not([data-dominance])';
+ document.querySelectorAll(selector).forEach(x=>x.classList.remove('selected'));
  el.classList.add('selected');
  if(type==='sex')profile.sex=el.dataset.sex;
+ else if(type==='dominance')profile.dominance=el.dataset.dominance;
  else profile.device=el.textContent.replace(/[📱📟💻]/g,'').trim();
 }
 
@@ -340,7 +501,7 @@ function escapeHtml(v){
 
 function newUser(){
  editingUserId=null;
- Object.assign(profile,{name:'',sex:'',birth:'',education:'',device:''});
+ Object.assign(profile,{name:'',sex:'',dominance:'',birth:'',education:'',device:''});
  fillProfileForm();
  $('profile-title').textContent='Crear usuari';
  $('profile-error').textContent='';
@@ -360,10 +521,15 @@ function fillProfileForm(){
  $('birth').value=profile.birth||'';
  $('education').value=profile.education||'';
  document.querySelectorAll('.choice').forEach(x=>x.classList.remove('selected'));
+ const normalizedSex=profile.sex==='Masculí'?'Home':profile.sex==='Femení'?'Dona':profile.sex;
+ profile.sex=normalizedSex||'';
  document.querySelectorAll('[data-sex]').forEach(x=>{
   if(x.dataset.sex===profile.sex)x.classList.add('selected');
  });
- document.querySelectorAll('.choices button:not([data-sex])').forEach(x=>{
+ document.querySelectorAll('[data-dominance]').forEach(x=>{
+  if(x.dataset.dominance===(profile.dominance||''))x.classList.add('selected');
+ });
+ document.querySelectorAll('.choices button:not([data-sex]):not([data-dominance])').forEach(x=>{
   if(x.textContent.replace(/[📱📟💻]/g,'').trim()===profile.device)x.classList.add('selected');
  });
 }
@@ -373,8 +539,8 @@ function saveProfile(){
  profile.birth=$('birth').value;
  profile.education=$('education').value;
 
- if(!profile.name||!profile.sex||!profile.birth||!profile.education||!profile.device){
-  $('profile-error').textContent='Completa tots els camps abans de continuar.';
+ if(!profile.name||!profile.sex||!profile.dominance||!profile.birth||!profile.education||!profile.device){
+  $('profile-error').textContent='Completa tots els camps, incloent-hi el sexe i la dominància manual.';
   return;
  }
 
@@ -412,7 +578,10 @@ function loadSelectedUser(){
  const u=users.find(x=>x.id===id);
  if(!u)return;
  currentUserId=id;
- Object.assign(profile,u.profile);
+ Object.assign(profile,{dominance:'',...u.profile});
+ if(profile.sex==='Masculí')profile.sex='Home';
+ if(profile.sex==='Femení')profile.sex='Dona';
+ u.profile.sex=profile.sex;
  data.mental=[];
  data.estimate=[];
  data.line=[];
@@ -433,7 +602,7 @@ function switchUser(){
 function renderProfileSummary(){
  const u=users.find(x=>x.id===currentUserId);
  if(!u)return;
- $('profile-summary').textContent=`Usuari: ${u.profile.name} · Sexe: ${u.profile.sex} · Naixement: ${u.profile.birth} · Estudis: ${u.profile.education} · Dispositiu: ${u.profile.device}`;
+ $('profile-summary').textContent=`Usuari: ${u.profile.name} · Sexe: ${u.profile.sex||'—'} · Dominància manual: ${u.profile.dominance||'No indicada'} · Naixement: ${u.profile.birth} · Estudis: ${u.profile.education} · Dispositiu: ${u.profile.device}`;
 }
 
 function toHub(){
@@ -492,6 +661,23 @@ function finishRun(){
  activeRun=null;
 }
 
+function abortCurrentRun(){
+ if(!activeRun){showScreen('hub');return;}
+ if(!confirm('Vols abandonar aquesta prova? S’esborraran totes les respostes d’aquest intent i tornaràs al menú principal.'))return;
+ if(comparisonNextTimer){clearTimeout(comparisonNextTimer);comparisonNextTimer=null;}
+ if(lineNextTimer){clearTimeout(lineNextTimer);lineNextTimer=null;}
+ if(doneTimer){clearTimeout(doneTimer);doneTimer=null;}
+ const u=users.find(x=>x.id===currentUserId);
+ if(u&&Array.isArray(u.sessions))u.sessions=u.sessions.filter(x=>x.id!==activeRun.id);
+ const module=activeRun.module;
+ activeRun=null;
+ if(module==='mental'){data.mental=[];mTrials=[];mi=0;}
+ if(module==='comparison'){data.comparison=[];cTrials=[];ci=0;comparisonLocked=false;}
+ persistUsers();
+ updateStatus();
+ showScreen('hub');
+}
+
 function done(title,msg){
  if(doneTimer)clearTimeout(doneTimer);
  finishRun();
@@ -525,6 +711,7 @@ function makeMental(){
   {a:3,b:3,label:'3+3'}
  ];
  const range=n=>n===1?[1,9]:n===2?[10,99]:[100,999];
+ // Cinc sumes per cadascuna de les cinc combinacions de dígits.
  for(const c of addCategories){
   const [amin,amax]=range(c.a),[bmin,bmax]=range(c.b);
   for(let i=0;i<5;i++){
@@ -532,6 +719,8 @@ function makeMental(){
    trials.push({op:'+',kind:'Suma',x,y,answer:x+y,cat:`Suma_${c.label}`,categoryLabel:c.label});
   }
  }
+ // En les restes, el nombre de més dígits va primer per evitar resultats negatius.
+ // Les categories 1+2 i 2+3 es representen com 2-1 i 3-2.
  const subCategories=[
   {a:1,b:1,label:'1-1',requested:'1+1'},
   {a:2,b:1,label:'2-1',requested:'1+2'},
@@ -652,6 +841,7 @@ function renderEstimate(){
  box.innerHTML='';
  box.classList.remove('hidden');
 
+ // Espera que el navegador hagi pintat la pantalla per mesurar l'àrea.
  requestAnimationFrame(()=>{
   const w=Math.max(100,box.clientWidth);
   const h=Math.max(150,box.clientHeight);
@@ -673,6 +863,7 @@ function renderEstimate(){
    box.appendChild(d);
   }
 
+  // Els punts es mantenen visibles exactament 500 ms.
   setTimeout(()=>{
    box.classList.add('hidden');
    eStart=performance.now();
@@ -686,24 +877,30 @@ function renderEstimate(){
 
 function stopEstimateClock(){if(eStopTime===null)eStopTime=performance.now()-eStart}
 
+$('eanswer').addEventListener('input',stopEstimateClock);
+
 function submitEstimate(){
- if(ei>=25)return;
- const raw=$('eanswer').value;
- if(raw.trim()===''){
-  $('enote').textContent='Escriu una estimació abans de continuar.';
+ if($('esubmit').disabled)return;
+ $('esubmit').disabled=true;
+
+ let raw=$('eanswer').value;
+ if(raw.trim()===''||!Number.isFinite(Number(raw))||Number(raw)<0){
+  $('enote').textContent='Introdueix una quantitat vàlida.';
+  $('esubmit').disabled=false;
   return;
  }
+
  stopEstimateClock();
- const t=eTrials[ei];
+ let t=eTrials[ei];
  data.estimate.push({
   trial:ei+1,
-  rangeGroup:t.group,
   range:t.rangeLabel,
+  rangeGroup:t.group,
   actual:t.actual,
   response:Number(raw),
-  error:Math.abs(Number(raw)-t.actual),
   timeMs:Math.round(eStopTime)
  });
+
  saveRunProgress('estimate');
  ei++;
 
@@ -776,107 +973,13 @@ $('linehit').addEventListener('pointerdown',e=>{
  saveRunProgress('line');
  $('ltarget').style.visibility='hidden';
  li++;
+ // La marca queda visible aproximadament 1,1 segons abans del següent estímul.
  if(lineNextTimer)clearTimeout(lineNextTimer);
  lineNextTimer=setTimeout(()=>{lineNextTimer=null;renderLine()},1100);
 });
 
-$('eanswer').addEventListener('input',stopEstimateClock);
-
-function submitEstimate(){
- if($('esubmit').disabled)return;
- $('esubmit').disabled=true;
-
- let raw=$('eanswer').value;
- if(raw.trim()===''||!Number.isFinite(Number(raw))||Number(raw)<0){
-  $('enote').textContent='Introdueix una quantitat vàlida.';
-  $('esubmit').disabled=false;
-  return;
- }
-
- stopEstimateClock();
- let t=eTrials[ei];
- data.estimate.push({
-  trial:ei+1,
-  range:t.rangeLabel,
-  rangeGroup:t.group,
-  actual:t.actual,
-  response:Number(raw),
-  timeMs:Math.round(eStopTime)
- });
-
- saveRunProgress('estimate');
- ei++;
-
- if(ei>=25){
-  done('Estimació completada','Has completat els 25 estímuls. S’han registrat la quantitat estimada, la quantitat real i el temps de resposta.');
-  return;
- }
-
- $('enextcount').textContent=`${ei+1} / 25`;
- showScreen('estimateNext');
-}
-
-function nextEstimate(){
- showScreen('estimate');
- renderEstimate();
-}
-
-/* RECTA NUMÈRICA */
-
-function makeLine(){
- const low=new Set(),high=new Set();
- while(low.size<5)low.add(rand(1,49));
- while(high.size<5)high.add(rand(51,99));
- return shuffle([...low,...high]);
-}
-
-function startLine(){
- if(lineNextTimer){clearTimeout(lineNextTimer);lineNextTimer=null}
- lTrials=makeLine();
- li=0;
- data.line=[];
- startRun('line');
- showScreen('line');
- $('ltarget').style.visibility='hidden';
- $('line-marker').style.display='none';
- lineReady=false;
- setTimeout(renderLine,2000);
-}
-
-function renderLine(){
- if(li>=10){
-  done('Recta numèrica completada','Has completat els 10 estímuls. S’han registrat la resposta, l’error absolut i el temps de resposta.');
-  return;
- }
-
- $('lc').textContent=`${li+1} / 10`;
- $('lp').style.width=`${li/10*100}%`;
- $('ltarget').textContent=lTrials[li];
- $('ltarget').style.visibility='visible';
- $('line-marker').style.display='none';
- lStart=performance.now();
- lineReady=true;
-}
-
-$('linehit').addEventListener('pointerdown',e=>{
- if(!lineReady)return;
- lineReady=false;
- const r=$('linehit').getBoundingClientRect();
- const fraction=Math.max(0,Math.min(1,(e.clientX-r.left)/r.width));
- const guess=Math.round(fraction*100),target=lTrials[li];
- const elapsed=Math.round(performance.now()-lStart);
- const marker=$('line-marker');
- marker.style.left=`${fraction*100}%`;
- marker.style.display='block';
- data.line.push({trial:li+1,target,response:guess,error:Math.abs(target-guess),timeMs:elapsed});
- saveRunProgress('line');
- $('ltarget').style.visibility='hidden';
- li++;
- if(lineNextTimer)clearTimeout(lineNextTimer);
- lineNextTimer=setTimeout(()=>{lineNextTimer=null;renderLine()},1100);
-});
-
-/* COMPARACIÓ NUMÈRICA */
+/* COMPARACIÓ NUMÈRICA: tasca adaptada amb una condició simbòlica i una de no simbòlica.
+   S'utilitzen totes les parelles ordenades no iguals de l'1 al 9 (36 per condició). */
 
 function makeComparisonTrials(){
  const symbolic=[],nonsymbolic=[];
@@ -887,10 +990,13 @@ function makeComparisonTrials(){
    nonsymbolic.push({condition:'nonsymbolic',left,right,larger:left>right?'left':'right',distance:Math.abs(left-right),ratio:Math.min(left,right)/Math.max(left,right)});
   }
  }
+
  return shuffle(symbolic).concat(shuffle(nonsymbolic));
 }
 
 function startComparison(){
+ if(comparisonNextTimer){clearTimeout(comparisonNextTimer);comparisonNextTimer=null;}
+ comparisonLocked=false;
  cTrials=makeComparisonTrials();
  ci=0;
  cCondition='symbolic';
@@ -901,6 +1007,7 @@ function startComparison(){
 
 window.beginComparison=function(){
  try{
+  comparisonLocked=false;
   if(!Array.isArray(cTrials)||cTrials.length===0){
    cTrials=makeComparisonTrials();
    ci=0;
@@ -910,7 +1017,7 @@ window.beginComparison=function(){
   renderComparison();
  }catch(error){
   console.error('Error en iniciar la comparació:',error);
-  alert('No s’ha pogut iniciar la comparació: '+(error&&error.message?error.message:'error desconegut'));
+  alert('No s’ha pogut iniciar la prova: '+(error&&error.message?error.message:'error desconegut'));
  }
 };
 
@@ -940,11 +1047,9 @@ function renderComparison(){
   done('Comparació numèrica completada','Has completat les 72 comparacions. S’han registrat l’encert, el temps de resposta, la distància i la proporció entre quantitats.');
   return;
  }
-
  const t=cTrials[ci];
  cCondition=t.condition;
  const symbolic=t.condition==='symbolic';
-
  $('compare-condition').textContent=symbolic?'COMPARACIÓ SIMBÒLICA':'COMPARACIÓ NO SIMBÒLICA';
  $('compare-instruction').textContent=symbolic?'Quin nombre escrit és més gran?':'Quin conjunt conté més punts?';
  $('compare-count').textContent=`${ci+1} / ${cTrials.length}`;
@@ -952,12 +1057,10 @@ function renderComparison(){
  $('compare-note').textContent='Selecciona el costat que representa la quantitat més gran.';
  $('compare-left-button').disabled=false;
  $('compare-right-button').disabled=false;
-
  $('compare-left-number').style.display=symbolic?'block':'none';
  $('compare-right-number').style.display=symbolic?'block':'none';
  $('compare-left-dots').style.display=symbolic?'none':'block';
  $('compare-right-dots').style.display=symbolic?'none':'block';
-
  if(symbolic){
   $('compare-left-number').textContent=t.left;
   $('compare-right-number').textContent=t.right;
@@ -965,17 +1068,15 @@ function renderComparison(){
   drawComparisonDots($('compare-left-dots'),t.left);
   drawComparisonDots($('compare-right-dots'),t.right);
  }
-
  cStart=performance.now();
 }
 
-function answerComparison(side){
- if(!cTrials[ci])return;
-
+function answerComparison(side,method='button'){
+ if(comparisonLocked||!cTrials[ci]||$('comparison').classList.contains('active')===false)return;
+ comparisonLocked=true;
  const t=cTrials[ci];
  const elapsed=Math.round(performance.now()-cStart);
  const correct=side===t.larger;
-
  data.comparison.push({
   trial:ci+1,
   condition:t.condition,
@@ -986,15 +1087,20 @@ function answerComparison(side){
   correct,
   numericalDistance:t.distance,
   numericalRatio:Number(t.ratio.toFixed(4)),
-  timeMs:elapsed
+  timeMs:elapsed,
+  responseMethod:method
  });
-
  $('compare-left-button').disabled=true;
  $('compare-right-button').disabled=true;
  $('compare-note').textContent=correct?'Correcte.':'Incorrecte.';
  saveRunProgress('comparison');
  ci++;
- setTimeout(renderComparison,250);
+ if(comparisonNextTimer)clearTimeout(comparisonNextTimer);
+ comparisonNextTimer=setTimeout(()=>{
+  comparisonNextTimer=null;
+  comparisonLocked=false;
+  if($('comparison').classList.contains('active'))renderComparison();
+ },1000);
 }
 
 /* HISTORIAL, RESULTATS I EXPORTACIÓ */
@@ -1012,6 +1118,7 @@ function rowsForRun(u,run){
  return (run.results||[]).map(x=>({
   Usuari:p.name,
   Sexe:p.sex,
+  DominanciaManual:p.dominance||'',
   DataNaixement:p.birth,
   NivellEstudis:p.education,
   Dispositiu:p.device,
@@ -1187,11 +1294,20 @@ function resetAll(){
  showScreen('hub');
 }
 
+window.addEventListener('keydown',e=>{
+ if(!$('comparison')||!$('comparison').classList.contains('active'))return;
+ if(e.key==='ArrowLeft'){
+  e.preventDefault();
+  if(!e.repeat)answerComparison('left','keyboard');
+ }else if(e.key==='ArrowRight'){
+  e.preventDefault();
+  if(!e.repeat)answerComparison('right','keyboard');
+ }
+});
+
 window.addEventListener('DOMContentLoaded',()=>{
  const comparisonButton=$('begin-comparison-button');
- if(comparisonButton){
-  comparisonButton.addEventListener('click',window.beginComparison);
- }
+ if(comparisonButton)comparisonButton.addEventListener('click',window.beginComparison);
  loadUsers();
  if(!users.length)$('home-note').textContent='Encara no hi ha usuaris guardats. Crea el primer usuari per començar.';
 });
