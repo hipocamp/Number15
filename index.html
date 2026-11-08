@@ -1,4 +1,3 @@
-
 <!doctype html>
 <html lang="ca">
 <head>
@@ -63,9 +62,7 @@ input,select{width:100%;padding:13px;border:2px solid #e8edf3;border-radius:10px
 .dots.hidden .dot{display:none}
 /* COMPARACIÓ DE MAGNITUDS */
 .comparison-pair{display:grid;grid-template-columns:1fr 1fr;gap:14px;align-items:center;max-width:720px;margin:12px auto;position:relative}
-.comparison-feedback{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:54px;height:54px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:32px;font-weight:900;background:#fff;border:2px solid var(--line);box-shadow:0 4px 18px #0f172a22;z-index:10;pointer-events:none}
-.comparison-feedback.correct{color:#15803d;border-color:#86efac}
-.comparison-feedback.incorrect{color:#dc2626;border-color:#fca5a5}
+.comparison-feedback{display:none!important}
 .comparison-side{min-width:0;text-align:center}
 .comparison-value{min-height:210px;display:flex;align-items:center;justify-content:center;border:1px solid var(--line);border-radius:14px;background:#f8fafc;padding:8px}
 .comparison-digit{font-size:clamp(64px,12vw,100px);font-weight:850;color:#0f172a;line-height:1}
@@ -77,6 +74,10 @@ input,select{width:100%;padding:13px;border:2px solid #e8edf3;border-radius:10px
 .comparison-responses .btn{min-height:58px}
 .comparison-instruction{font-size:15px;color:var(--muted);text-align:center;line-height:1.5}
 .comparison-blank{visibility:hidden}
+/* Pantalla blanca amb creu neutra durant un segon després de cada resposta */
+#comparison-mask{position:fixed;inset:0;background:#fff;display:none;align-items:center;justify-content:center;z-index:99999}
+#comparison-mask.visible{display:flex}
+.neutral-cross{display:block;color:#111;font-size:64px;font-weight:400;line-height:1}
 @media(max-width:520px){.comparison-pair{gap:8px}.comparison-value{min-height:165px;padding:5px}.dotfield{width:min(100%,165px)}.comp-dot{width:6px;height:6px}.comparison-responses{gap:8px}.comparison-responses .btn{padding:11px 7px;font-size:13px}}
 .history-item{border:1px solid var(--line);border-radius:12px;padding:15px;margin:10px 0;background:#fff}
 .history-item h3{margin:0 0 5px}
@@ -301,7 +302,10 @@ footer{text-align:center;color:#94a3b8;font-size:12px;padding:20px}
   <div class="answer">
    <label for="manswer">La teva resposta</label>
    <input id="manswer" type="number" inputmode="numeric" placeholder="Escriu el resultat">
-   <button class="btn" style="width:100%;margin-top:12px" onclick="submitMental()">Validar resposta</button>
+   <div class="two" style="margin-top:12px">
+    <button class="btn" onclick="submitMental()">Validar resposta</button>
+    <button class="btn secondary" onclick="submitMental(true)">No sé</button>
+   </div>
   </div>
   <p id="mnote" class="note">Respon tan ràpid i bé com puguis.</p>
  </div>
@@ -376,8 +380,8 @@ footer{text-align:center;color:#94a3b8;font-size:12px;padding:20px}
    <h2>Quin costat representa una quantitat més gran?</h2>
    <p>Primer compararàs parelles de nombres escrits. Després compararàs parelles de conjunts de punts.</p>
    <p>En cada assaig, selecciona el costat que conté el valor més gran. Respon tan ràpidament i amb tanta precisió com puguis.</p>
-   <p><strong>Després de cada resposta veuràs si ha estat correcta.</strong></p>
-   <p class="comparison-instruction">La tasca conté 288 assaigs (144 per condició): les 72 parelles ordenades de nombres de l’1 al 9, amb dues repeticions. En la condició de punts, els valors es multipliquen per cinc (5–45) per evitar la subitització. L’estudi original feia deu repeticions per parella; aquesta és una versió abreujada. Pots respondre amb les fletxes esquerra/dreta o amb els botons. L’ordre de les condicions s’alterna entre participants. La mida visual dels punts és una aproximació en píxels: la pantalla no està calibrada en graus visuals.</p>
+   <p><strong>Després de cada resposta, la pantalla quedarà blanca i hi apareixerà una creu negra durant un segon.</strong></p>
+   <p class="comparison-instruction">La tasca conté 288 assaigs (144 per condició): les 72 parelles ordenades de nombres de l’1 al 9, amb dues repeticions. En la condició de punts, els valors es multipliquen per cinc (5–45) per evitar la subitització. L’estudi original feia deu repeticions per parella; aquesta és una versió abreujada. Pots respondre amb les fletxes esquerra/dreta o amb els botons. L’ordre de les condicions s’alterna entre participants. La mida visual dels punts és una aproximació en píxels: la pantalla no està calibrada en graus visuals. </p>
   </div>
   <div class="test-actions"><button class="btn" onclick="beginComparison()">COMENÇAR</button></div>
  </div>
@@ -419,6 +423,7 @@ footer{text-align:center;color:#94a3b8;font-size:12px;padding:20px}
   <p class="note" id="cnote">Respon tan ràpidament i amb tanta precisió com puguis.</p>
  </div>
 </section>
+<div id="comparison-mask" aria-hidden="true"><span class="neutral-cross">✕</span></div>
 
 <section id="history" class="screen">
  <div class="card">
@@ -735,7 +740,6 @@ function makeMental(){
  }
  return sums.concat(subtractions);
 }
-
 function startMental(){
  mTrials=makeMental();
  mi=0;
@@ -763,7 +767,7 @@ function renderMental(){
  $('mcat').textContent=`${t.kind.toUpperCase()} · ${t.categoryLabel} DÍGITS`;
  $('op').textContent=`${t.x} ${t.op} ${t.y} =`;
  $('manswer').value='';
- $('mnote').textContent='Respon tan ràpid i bé com puguis.';
+ $('mnote').textContent='Respon tan ràpid i bé com puguis. Si no saps la resposta, prem «No sé».';
  mStart=performance.now();
  mStopTime=null;
  $('manswer').focus();
@@ -771,16 +775,18 @@ function renderMental(){
 
 function stopMentalClock(){if(mStopTime===null)mStopTime=performance.now()-mStart}
 
-function submitMental(){
+function submitMental(noSe=false){
  if(mi>=mTrials.length)return;
  const raw=$('manswer').value;
- if(raw.trim()===''){
-  $('mnote').textContent='Escriu una resposta abans de continuar.';
+ if(!noSe&&raw.trim()===''){
+  $('mnote').textContent='Escriu una resposta o prem «No sé».';
   return;
  }
  stopMentalClock();
- const t=mTrials[mi],response=Number(raw),time=Math.round(mStopTime);
- const correct=response===t.answer;
+ const t=mTrials[mi];
+ const response=noSe?'No sé':Number(raw);
+ const time=Math.round(mStopTime);
+ const correct=!noSe&&response===t.answer;
  if(correct)mConsecutiveErrors=0;
  else mConsecutiveErrors++;
  data.mental.push({
@@ -790,6 +796,7 @@ function submitMental(){
   requestedCategory:t.requestedCategory||t.categoryLabel,
   operation:`${t.x} ${t.op} ${t.y}`,
   response,
+  noSe,
   correctAnswer:t.answer,
   correct,
   consecutiveErrors:mConsecutiveErrors,
@@ -801,14 +808,13 @@ function submitMental(){
   mi=25;
   mConsecutiveErrors=0;
  }else if(t.phase==='resta'&&mConsecutiveErrors>=3){
-  done('Càlcul mental finalitzat',`La prova s’ha aturat després de tres errors consecutius en les restes. Operacions respostes: ${data.mental.length}. Encerts: ${data.mental.filter(x=>x.correct).length}.`);
+  done('Càlcul mental finalitzat',`La prova s’ha aturat després de tres errors consecutius (respostes incorrectes i/o «No sé») en les restes. Operacions respostes: ${data.mental.length}. Encerts: ${data.mental.filter(x=>x.correct).length}.`);
   return;
  }else if(t.phase==='suma'&&mi===25){
   mConsecutiveErrors=0;
  }
  renderMental();
 }
-
 $('manswer').addEventListener('input',stopMentalClock);
 $('manswer').addEventListener('keydown',e=>{
  if(e.key==='Enter')submitMental();
@@ -1050,6 +1056,7 @@ function beginComparisonSecondBlock(){
 }
 
 function renderComparisonTrial(){
+ $('comparison-mask').classList.remove('visible');
  if(comparisonBlockIndex>=2){
   const summary=comparisonSummary();
   done('Comparació de magnituds completada',`Has completat els 288 assaigs. Nombres: ${summary.symbolic.accuracy}% d'encerts i ${summary.symbolic.meanRT} ms de temps mitjà en respostes correctes. Punts: ${summary.dots.accuracy}% d'encerts i ${summary.dots.meanRT} ms de temps mitjà en respostes correctes.`);
@@ -1070,6 +1077,7 @@ function renderComparisonTrial(){
  feedback.style.display='none';
  feedback.className='comparison-feedback';
  feedback.textContent='';
+ $('cnote').className='note';
  const totalTrial=data.comparison.length+1;
  $('cc').textContent=`${totalTrial} / 288`;
  $('cp').style.width=`${(data.comparison.length/288)*100}%`;
@@ -1148,11 +1156,9 @@ function answerComparison(side){
   timeMs:rt
  });
  saveRunProgress('comparison');
- const feedback=$('compare-feedback');
- feedback.textContent=correct?'✓':'✕';
- feedback.className=`comparison-feedback ${correct?'correct':'incorrect'}`;
- feedback.style.display='flex';
- $('cnote').textContent=correct?'Correcte.':'Incorrecte.';
+ // Durant un segon només es mostra una creu negra sobre fons blanc.
+ // La creu és neutra: no revela si la resposta ha estat correcta.
+ $('comparison-mask').classList.add('visible');
  comparisonTrialIndex++;
  if(comparisonNextTimer)clearTimeout(comparisonNextTimer);
  comparisonNextTimer=setTimeout(()=>{
@@ -1160,7 +1166,6 @@ function answerComparison(side){
   renderComparisonTrial();
  },1000);
 }
-
 function handleComparisonKey(e){
  if(!$('comparison')?.classList.contains('active'))return;
  if(e.key==='ArrowLeft'||e.key.toLowerCase()==='a'){
