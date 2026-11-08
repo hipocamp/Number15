@@ -61,17 +61,23 @@ input,select{width:100%;padding:13px;border:2px solid #e8edf3;border-radius:10px
 .dots{width:100%;height:245px;min-height:220px;position:relative;overflow:hidden;border:1px solid #eef2f7;border-radius:13px;background:#f8fafc}
 .dot{position:absolute;width:13px;height:13px;background:#2563eb;border-radius:50%}
 .dots.hidden .dot{display:none}
-.compare-pair{display:grid;grid-template-columns:1fr 1fr;gap:18px;max-width:620px;margin:18px auto;width:100%}
-.compare-side{min-height:210px;border:2px solid var(--line);border-radius:14px;background:#f8fafc;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
-.compare-number{font-size:clamp(64px,12vw,100px);font-weight:900;color:#0f172a}
-.compare-dots{width:100%;height:100%;min-height:210px;position:relative}
-.compare-dot{position:absolute;width:13px;height:13px;background:#111;border-radius:50%}
-.compare-actions{display:flex;gap:12px;max-width:620px;margin:18px auto}
-.compare-actions .btn{flex:1}
-.exit-row{display:flex;justify-content:flex-end;margin-bottom:10px}
-.exit-btn{background:#f1f5f9;color:#475569;border:1px solid #dbe3ec;border-radius:9px;padding:8px 12px;font-size:12px;font-weight:750}
-.exit-btn:hover{background:#e2e8f0}
-@media(max-width:520px){.compare-pair{gap:8px}.compare-side{min-height:170px}.compare-dots{min-height:170px}.compare-actions{gap:8px}.compare-actions .btn{padding:12px 7px;font-size:13px}}
+/* COMPARACIÓ DE MAGNITUDS */
+.comparison-pair{display:grid;grid-template-columns:1fr 1fr;gap:14px;align-items:center;max-width:720px;margin:12px auto;position:relative}
+.comparison-feedback{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:54px;height:54px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:32px;font-weight:900;background:#fff;border:2px solid var(--line);box-shadow:0 4px 18px #0f172a22;z-index:10;pointer-events:none}
+.comparison-feedback.correct{color:#15803d;border-color:#86efac}
+.comparison-feedback.incorrect{color:#dc2626;border-color:#fca5a5}
+.comparison-side{min-width:0;text-align:center}
+.comparison-value{min-height:210px;display:flex;align-items:center;justify-content:center;border:1px solid var(--line);border-radius:14px;background:#f8fafc;padding:8px}
+.comparison-digit{font-size:clamp(64px,12vw,100px);font-weight:850;color:#0f172a;line-height:1}
+.dotfield{width:min(100%,220px);aspect-ratio:1/1;position:relative;overflow:hidden;background:#aeb4bb;border-radius:3px}
+.comp-dot{position:absolute;width:8px;height:8px;border-radius:50%;transform:translate(-50%,-50%)}
+.comp-dot.black{background:#111}
+.comp-dot.white{background:#fff}
+.comparison-responses{display:grid;grid-template-columns:1fr 1fr;gap:12px;max-width:560px;margin:18px auto 0}
+.comparison-responses .btn{min-height:58px}
+.comparison-instruction{font-size:15px;color:var(--muted);text-align:center;line-height:1.5}
+.comparison-blank{visibility:hidden}
+@media(max-width:520px){.comparison-pair{gap:8px}.comparison-value{min-height:165px;padding:5px}.dotfield{width:min(100%,165px)}.comp-dot{width:6px;height:6px}.comparison-responses{gap:8px}.comparison-responses .btn{padding:11px 7px;font-size:13px}}
 .history-item{border:1px solid var(--line);border-radius:12px;padding:15px;margin:10px 0;background:#fff}
 .history-item h3{margin:0 0 5px}
 .history-meta{font-size:12px;color:var(--muted);margin-bottom:10px}
@@ -146,6 +152,11 @@ footer{text-align:center;color:#94a3b8;font-size:12px;padding:20px}
    <h3>Recta numèrica</h3>
    <p>10 nombres: cinc per sota de 50 i cinc per sobre de 50.</p>
   </div>
+  <div class="module">
+   <div class="symbol">↔️</div>
+   <h3>Comparació de magnituds</h3>
+   <p>Comparació de nombres i conjunts de punts; efectes de distància i magnitud.</p>
+  </div>
  </div>
 </section>
 
@@ -157,22 +168,11 @@ footer{text-align:center;color:#94a3b8;font-size:12px;padding:20px}
    <label>Nom i cognoms / codi d’usuari</label>
    <input id="user-name" type="text" autocomplete="off" placeholder="Identificador de l’alumne">
   </div>
-  <div class="two">
-   <div class="field">
-    <label>Sexe</label>
-    <div class="choices">
-     <button type="button" class="choice" data-sex="Home" onclick="pick(this,'sex')">Home</button>
-     <button type="button" class="choice" data-sex="Dona" onclick="pick(this,'sex')">Dona</button>
-     <button type="button" class="choice" data-sex="No contesta" onclick="pick(this,'sex')">No contesta</button>
-    </div>
-   </div>
-   <div class="field">
-    <label>Dominància manual</label>
-    <div class="choices">
-     <button type="button" class="choice" data-dominance="Esquerrà" onclick="pick(this,'dominance')">Esquerrà</button>
-     <button type="button" class="choice" data-dominance="Dretà" onclick="pick(this,'dominance')">Dretà</button>
-     <button type="button" class="choice" data-dominance="Ambidextre" onclick="pick(this,'dominance')">Ambidextre</button>
-    </div>
+  <div class="field">
+   <label>Sexe</label>
+   <div class="choices">
+    <button class="choice" data-sex="Masculí" onclick="pick(this,'sex')">Masculí</button>
+    <button class="choice" data-sex="Femení" onclick="pick(this,'sex')">Femení</button>
    </div>
   </div>
   <div class="two">
@@ -246,9 +246,9 @@ footer{text-align:center;color:#94a3b8;font-size:12px;padding:20px}
    <button class="btn" onclick="startLine()">Iniciar mòdul</button>
   </div>
   <div class="module">
-   <div class="symbol">⚖️</div>
-   <h3>Comparació numèrica</h3>
-   <p>Comparació simbòlica de nombres i comparació no simbòlica de conjunts de punts.</p>
+   <div class="symbol">↔️</div>
+   <h3>Comparació de magnituds</h3>
+   <p>288 assaigs: 144 amb nombres i 144 amb conjunts de punts.</p>
    <div class="status" id="cs">Pendent</div>
    <button class="btn" onclick="startComparison()">Iniciar mòdul</button>
   </div>
@@ -256,7 +256,7 @@ footer{text-align:center;color:#94a3b8;font-size:12px;padding:20px}
 
  <div class="card" style="margin-top:16px">
   <h3>Resultats</h3>
-  <p class="note">Exporta un CSV amb una fila per estímul, les dades personals i els indicadors resumits del càlcul mental.</p>
+  <p class="note">Exporta un CSV amb una fila per estímul, les dades personals i els resultats de tots els mòduls, inclosa la comparació de magnituds.</p>
   <div class="btnrow">
    <button class="btn" onclick="downloadAllCSV()">Descarregar tots els resultats (CSV)</button>
    <button class="btn secondary" onclick="backupUsers()">Còpia de seguretat</button>
@@ -277,14 +277,12 @@ footer{text-align:center;color:#94a3b8;font-size:12px;padding:20px}
   </div>
   <div class="test-actions">
    <button class="btn" onclick="beginMental()">COMENÇAR</button>
-   <button class="exit-btn" style="width:100%;margin-top:10px" onclick="abortCurrentRun()">Tornar al menú i esborrar aquest intent</button>
   </div>
  </div>
 </section>
 
 <section id="mental" class="screen">
  <div class="card">
-  <div class="exit-row"><button class="exit-btn" onclick="abortCurrentRun()">Tornar al menú i esborrar aquest intent</button></div>
   <div class="topline">
    <span>CÀLCUL MENTAL</span>
    <span id="mc">1 / 50</span>
@@ -365,36 +363,52 @@ footer{text-align:center;color:#94a3b8;font-size:12px;padding:20px}
 
 <section id="comparisonIntro" class="screen">
  <div class="card">
-  <div class="topline"><span>COMPARACIÓ NUMÈRICA</span><span>INSTRUCCIONS</span></div>
+  <div class="topline"><span>COMPARACIÓ DE MAGNITUDS</span><span>INSTRUCCIONS</span></div>
   <div class="instructions">
-   <h2>Abans de començar</h2>
-   <p>En aquesta prova hauràs de decidir quin costat representa una quantitat més gran.</p>
-   <p>Primer compararàs nombres escrits amb xifres. Després compararàs conjunts de punts. Respon tan ràpid i correctament com puguis.</p>
-   <p><strong>En ordinador també pots respondre amb les fletxes: ← esquerra i → dreta.</strong></p>
-   <p><strong>La prova consta de dues parts. En total són 72 comparacions.</strong></p>
+   <h2>Quin costat representa una quantitat més gran?</h2>
+   <p>Primer compararàs parelles de nombres escrits. Després compararàs parelles de conjunts de punts.</p>
+   <p>En cada assaig, selecciona el costat que conté el valor més gran. Respon tan ràpidament i amb tanta precisió com puguis.</p>
+   <p><strong>Després de cada resposta veuràs si ha estat correcta.</strong></p>
+   <p class="comparison-instruction">La tasca conté 288 assaigs (144 per condició): les 72 parelles ordenades de nombres de l’1 al 9, amb dues repeticions. En la condició de punts, els valors es multipliquen per cinc (5–45) per evitar la subitització. L’estudi original feia deu repeticions per parella; aquesta és una versió abreujada. Pots respondre amb les fletxes esquerra/dreta o amb els botons. L’ordre de les condicions s’alterna entre participants. La mida visual dels punts és una aproximació en píxels: la pantalla no està calibrada en graus visuals. </p>
   </div>
-  <div class="test-actions">
-   <button class="btn" type="button" id="begin-comparison-button">COMENÇAR</button>
-   <button class="exit-btn" style="width:100%;margin-top:10px" onclick="abortCurrentRun()">Tornar al menú i esborrar aquest intent</button>
+  <div class="test-actions"><button class="btn" onclick="beginComparison()">COMENÇAR</button></div>
+ </div>
+</section>
+
+<section id="comparisonBreak" class="screen">
+ <div class="card">
+  <div class="topline"><span>COMPARACIÓ DE MAGNITUDS</span><span>PAUSA</span></div>
+  <div class="instructions">
+   <h2>Primera part completada</h2>
+   <p>Has acabat la primera condició. Pots descansar uns moments abans de continuar amb l'altra modalitat.</p>
+   <p><strong>Recorda:</strong> selecciona sempre el costat amb més quantitat.</p>
   </div>
+  <div class="test-actions"><button class="btn" onclick="beginComparisonSecondBlock()">COMENÇAR SEGONA PART</button></div>
  </div>
 </section>
 
 <section id="comparison" class="screen">
  <div class="card">
-  <div class="exit-row"><button class="exit-btn" onclick="abortCurrentRun()">Tornar al menú i esborrar aquest intent</button></div>
-  <div class="topline"><span id="compare-condition">COMPARACIÓ SIMBÒLICA</span><span id="compare-count">1 / 72</span></div>
-  <div class="progress"><div id="compare-progress"></div></div>
-  <p class="note" id="compare-instruction">Quin nombre és més gran?</p>
-  <div class="compare-pair">
-   <div class="compare-side" id="compare-left"><div class="compare-number" id="compare-left-number">2</div><div class="compare-dots" id="compare-left-dots" style="display:none"></div></div>
-   <div class="compare-side" id="compare-right"><div class="compare-number" id="compare-right-number">7</div><div class="compare-dots" id="compare-right-dots" style="display:none"></div></div>
+  <div class="topline"><span>COMPARACIÓ DE MAGNITUDS</span><span id="cc">1 / 288</span></div>
+  <div class="progress"><div id="cp"></div></div>
+  <div class="center"><span class="pill" id="ccondition">NOMBRES ESCRITS</span></div>
+  <p class="comparison-instruction" id="cquestion">Quin nombre és més gran?</p>
+  <div class="comparison-pair">
+   <div id="compare-feedback" class="comparison-feedback" style="display:none" aria-live="polite"></div>
+   <div class="comparison-side">
+    <div class="comparison-value" id="cleft"><span class="comparison-digit">3</span></div>
+    <div class="status">ESQUERRA</div>
+   </div>
+   <div class="comparison-side">
+    <div class="comparison-value" id="cright"><span class="comparison-digit">7</span></div>
+    <div class="status">DRETA</div>
+   </div>
   </div>
-  <div class="compare-actions">
-   <button class="btn secondary" id="compare-left-button" onclick="answerComparison('left')">Esquerra</button>
-   <button class="btn secondary" id="compare-right-button" onclick="answerComparison('right')">Dreta</button>
+  <div class="comparison-responses">
+   <button class="btn" id="c-left-btn" onclick="answerComparison('left')">← ESQUERRA</button>
+   <button class="btn" id="c-right-btn" onclick="answerComparison('right')">DRETA →</button>
   </div>
-  <p class="note" id="compare-note">Selecciona el costat que representa la quantitat més gran.</p>
+  <p class="note" id="cnote">Respon tan ràpidament i amb tanta precisió com puguis.</p>
  </div>
 </section>
 
@@ -435,7 +449,7 @@ footer{text-align:center;color:#94a3b8;font-size:12px;padding:20px}
 <footer>NUMBER15 · NeurekaLAB</footer>
 
 <script>
-const profile={name:'',sex:'',dominance:'',birth:'',education:'',device:''};
+const profile={name:'',sex:'',birth:'',education:'',device:''};
 const data={mental:[],estimate:[],line:[],comparison:[]};
 const STORAGE_KEY='number15_users_v3';
 
@@ -446,10 +460,12 @@ let activeRun=null;
 let selectedRunId=null;
 
 let mTrials=[],mi=0,mStart=0,mStopTime=null;
+let mConsecutiveErrors=0;
+let mSumSkipped=false;
 let eTrials=[],ei=0,eStart=0,eStopTime=null;
 let lTrials=[],li=0,lStart=0,lineReady=false;
-let cTrials=[],ci=0,cStart=0,cCondition='symbolic';
-let doneTimer=null,lineNextTimer=null,comparisonNextTimer=null,comparisonLocked=false;
+let comparisonBlocks=[],comparisonOrder=[],comparisonBlockIndex=0,comparisonTrialIndex=0,comparisonStart=0,comparisonReady=false,comparisonNextTimer=null;
+let doneTimer=null,lineNextTimer=null;
 
 const $=id=>document.getElementById(id);
 const rand=(a,b)=>Math.floor(Math.random()*(b-a+1))+a;
@@ -463,11 +479,9 @@ function showScreen(id){
 }
 
 function pick(el,type){
- const selector=type==='sex'?'[data-sex]':type==='dominance'?'[data-dominance]':'.choices button:not([data-sex]):not([data-dominance])';
- document.querySelectorAll(selector).forEach(x=>x.classList.remove('selected'));
+ document.querySelectorAll(type==='sex'?'[data-sex]':'.choices button:not([data-sex])').forEach(x=>x.classList.remove('selected'));
  el.classList.add('selected');
  if(type==='sex')profile.sex=el.dataset.sex;
- else if(type==='dominance')profile.dominance=el.dataset.dominance;
  else profile.device=el.textContent.replace(/[📱📟💻]/g,'').trim();
 }
 
@@ -501,7 +515,7 @@ function escapeHtml(v){
 
 function newUser(){
  editingUserId=null;
- Object.assign(profile,{name:'',sex:'',dominance:'',birth:'',education:'',device:''});
+ Object.assign(profile,{name:'',sex:'',birth:'',education:'',device:''});
  fillProfileForm();
  $('profile-title').textContent='Crear usuari';
  $('profile-error').textContent='';
@@ -521,15 +535,10 @@ function fillProfileForm(){
  $('birth').value=profile.birth||'';
  $('education').value=profile.education||'';
  document.querySelectorAll('.choice').forEach(x=>x.classList.remove('selected'));
- const normalizedSex=profile.sex==='Masculí'?'Home':profile.sex==='Femení'?'Dona':profile.sex;
- profile.sex=normalizedSex||'';
  document.querySelectorAll('[data-sex]').forEach(x=>{
   if(x.dataset.sex===profile.sex)x.classList.add('selected');
  });
- document.querySelectorAll('[data-dominance]').forEach(x=>{
-  if(x.dataset.dominance===(profile.dominance||''))x.classList.add('selected');
- });
- document.querySelectorAll('.choices button:not([data-sex]):not([data-dominance])').forEach(x=>{
+ document.querySelectorAll('.choices button:not([data-sex])').forEach(x=>{
   if(x.textContent.replace(/[📱📟💻]/g,'').trim()===profile.device)x.classList.add('selected');
  });
 }
@@ -539,8 +548,8 @@ function saveProfile(){
  profile.birth=$('birth').value;
  profile.education=$('education').value;
 
- if(!profile.name||!profile.sex||!profile.dominance||!profile.birth||!profile.education||!profile.device){
-  $('profile-error').textContent='Completa tots els camps, incloent-hi el sexe i la dominància manual.';
+ if(!profile.name||!profile.sex||!profile.birth||!profile.education||!profile.device){
+  $('profile-error').textContent='Completa tots els camps abans de continuar.';
   return;
  }
 
@@ -578,10 +587,7 @@ function loadSelectedUser(){
  const u=users.find(x=>x.id===id);
  if(!u)return;
  currentUserId=id;
- Object.assign(profile,{dominance:'',...u.profile});
- if(profile.sex==='Masculí')profile.sex='Home';
- if(profile.sex==='Femení')profile.sex='Dona';
- u.profile.sex=profile.sex;
+ Object.assign(profile,u.profile);
  data.mental=[];
  data.estimate=[];
  data.line=[];
@@ -602,7 +608,7 @@ function switchUser(){
 function renderProfileSummary(){
  const u=users.find(x=>x.id===currentUserId);
  if(!u)return;
- $('profile-summary').textContent=`Usuari: ${u.profile.name} · Sexe: ${u.profile.sex||'—'} · Dominància manual: ${u.profile.dominance||'No indicada'} · Naixement: ${u.profile.birth} · Estudis: ${u.profile.education} · Dispositiu: ${u.profile.device}`;
+ $('profile-summary').textContent=`Usuari: ${u.profile.name} · Sexe: ${u.profile.sex} · Naixement: ${u.profile.birth} · Estudis: ${u.profile.education} · Dispositiu: ${u.profile.device}`;
 }
 
 function toHub(){
@@ -661,23 +667,6 @@ function finishRun(){
  activeRun=null;
 }
 
-function abortCurrentRun(){
- if(!activeRun){showScreen('hub');return;}
- if(!confirm('Vols abandonar aquesta prova? S’esborraran totes les respostes d’aquest intent i tornaràs al menú principal.'))return;
- if(comparisonNextTimer){clearTimeout(comparisonNextTimer);comparisonNextTimer=null;}
- if(lineNextTimer){clearTimeout(lineNextTimer);lineNextTimer=null;}
- if(doneTimer){clearTimeout(doneTimer);doneTimer=null;}
- const u=users.find(x=>x.id===currentUserId);
- if(u&&Array.isArray(u.sessions))u.sessions=u.sessions.filter(x=>x.id!==activeRun.id);
- const module=activeRun.module;
- activeRun=null;
- if(module==='mental'){data.mental=[];mTrials=[];mi=0;}
- if(module==='comparison'){data.comparison=[];cTrials=[];ci=0;comparisonLocked=false;}
- persistUsers();
- updateStatus();
- showScreen('hub');
-}
-
 function done(title,msg){
  if(doneTimer)clearTimeout(doneTimer);
  finishRun();
@@ -702,7 +691,7 @@ function shuffle(a){
 /* CÀLCUL MENTAL */
 
 function makeMental(){
- const trials=[];
+ const sums=[],subtractions=[];
  const addCategories=[
   {a:1,b:1,label:'1+1'},
   {a:1,b:2,label:'1+2'},
@@ -711,16 +700,15 @@ function makeMental(){
   {a:3,b:3,label:'3+3'}
  ];
  const range=n=>n===1?[1,9]:n===2?[10,99]:[100,999];
- // Cinc sumes per cadascuna de les cinc combinacions de dígits.
+ // Cinc sumes per categoria, en ordre de dificultat.
  for(const c of addCategories){
   const [amin,amax]=range(c.a),[bmin,bmax]=range(c.b);
   for(let i=0;i<5;i++){
    const x=rand(amin,amax),y=rand(bmin,bmax);
-   trials.push({op:'+',kind:'Suma',x,y,answer:x+y,cat:`Suma_${c.label}`,categoryLabel:c.label});
+   sums.push({op:'+',kind:'Suma',x,y,answer:x+y,cat:`Suma_${c.label}`,categoryLabel:c.label,phase:'suma'});
   }
  }
- // En les restes, el nombre de més dígits va primer per evitar resultats negatius.
- // Les categories 1+2 i 2+3 es representen com 2-1 i 3-2.
+ // Les restes van després de totes les sumes. El primer operand és més gran.
  const subCategories=[
   {a:1,b:1,label:'1-1',requested:'1+1'},
   {a:2,b:1,label:'2-1',requested:'1+2'},
@@ -733,15 +721,17 @@ function makeMental(){
   for(let i=0;i<5;i++){
    let x,y;
    do{x=rand(amin,amax);y=rand(bmin,bmax)}while(x<=y);
-   trials.push({op:'−',kind:'Resta',x,y,answer:x-y,cat:`Resta_${c.label}`,categoryLabel:c.label,requestedCategory:c.requested});
+   subtractions.push({op:'−',kind:'Resta',x,y,answer:x-y,cat:`Resta_${c.label}`,categoryLabel:c.label,requestedCategory:c.requested,phase:'resta'});
   }
  }
- return shuffle(trials);
+ return sums.concat(subtractions);
 }
 
 function startMental(){
  mTrials=makeMental();
  mi=0;
+ mConsecutiveErrors=0;
+ mSumSkipped=false;
  data.mental=[];
  startRun('mental');
  showScreen('mentalIntro');
@@ -753,12 +743,14 @@ function beginMental(){
 }
 
 function renderMental(){
- if(mi>=50){
-  done('Càlcul mental completat',`Has completat les 50 operacions. Encerts: ${data.mental.filter(x=>x.correct).length}/50.`);
+ if(mi>=mTrials.length){
+  const correct=data.mental.filter(x=>x.correct).length;
+  done('Càlcul mental completat',`Has completat ${data.mental.length} operacions. Encerts: ${correct}/${data.mental.length}.`);
   return;
  }
  const t=mTrials[mi];
- $('mc').textContent=`${mi+1} / 50`;
+ const phaseIndex=t.phase==='suma'?mi+1:mi-25+1;
+ $('mc').textContent=t.phase==='suma'?`Suma ${phaseIndex} / 25`:`Resta ${phaseIndex} / 25`;
  $('mp').style.width=`${mi/50*100}%`;
  $('mcat').textContent=`${t.kind.toUpperCase()} · ${t.categoryLabel} DÍGITS`;
  $('op').textContent=`${t.x} ${t.op} ${t.y} =`;
@@ -772,7 +764,7 @@ function renderMental(){
 function stopMentalClock(){if(mStopTime===null)mStopTime=performance.now()-mStart}
 
 function submitMental(){
- if(mi>=50)return;
+ if(mi>=mTrials.length)return;
  const raw=$('manswer').value;
  if(raw.trim()===''){
   $('mnote').textContent='Escriu una resposta abans de continuar.';
@@ -780,18 +772,35 @@ function submitMental(){
  }
  stopMentalClock();
  const t=mTrials[mi],response=Number(raw),time=Math.round(mStopTime);
+ const correct=response===t.answer;
+ if(correct)mConsecutiveErrors=0;
+ else mConsecutiveErrors++;
  data.mental.push({
-  trial:mi+1,
+  trial:data.mental.length+1,
+  phase:t.phase,
   category:t.cat,
   requestedCategory:t.requestedCategory||t.categoryLabel,
   operation:`${t.x} ${t.op} ${t.y}`,
   response,
   correctAnswer:t.answer,
-  correct:response===t.answer,
+  correct,
+  consecutiveErrors:mConsecutiveErrors,
   timeMs:time
  });
  saveRunProgress('mental');
  mi++;
+ if(t.phase==='suma'&&mConsecutiveErrors>=3){
+  // Tres errors seguits en sumes: saltar directament a la primera resta.
+  mi=25;
+  mSumSkipped=true;
+  mConsecutiveErrors=0;
+ }else if(t.phase==='resta'&&mConsecutiveErrors>=3){
+  done('Càlcul mental finalitzat',`La prova s’ha aturat després de tres errors consecutius en les restes. Operacions respostes: ${data.mental.length}. Encerts: ${data.mental.filter(x=>x.correct).length}.`);
+  return;
+ }else if(t.phase==='suma'&&mi===25){
+  // La ratxa d'errors de les sumes no passa a la secció de restes.
+  mConsecutiveErrors=0;
+ }
  renderMental();
 }
 
@@ -978,129 +987,198 @@ $('linehit').addEventListener('pointerdown',e=>{
  lineNextTimer=setTimeout(()=>{lineNextTimer=null;renderLine()},1100);
 });
 
-/* COMPARACIÓ NUMÈRICA: tasca adaptada amb una condició simbòlica i una de no simbòlica.
-   S'utilitzen totes les parelles ordenades no iguals de l'1 al 9 (36 per condició). */
+/* COMPARACIÓ DE MAGNITUDS: ADAPTACIÓ DE KRAJCSI ET AL. (2018) */
 
-function makeComparisonTrials(){
- const symbolic=[],nonsymbolic=[];
+// Les 9 x 8 parelles ordenades de nombres 1-9 (s'exclouen els empats).
+// Dues repeticions per parella: 144 assaigs per condició, 288 en total.
+function makeComparisonBlock(condition){
+ const trials=[];
  for(let left=1;left<=9;left++){
   for(let right=1;right<=9;right++){
    if(left===right)continue;
-   symbolic.push({condition:'symbolic',left,right,larger:left>right?'left':'right',distance:Math.abs(left-right),ratio:Math.min(left,right)/Math.max(left,right)});
-   nonsymbolic.push({condition:'nonsymbolic',left,right,larger:left>right?'left':'right',distance:Math.abs(left-right),ratio:Math.min(left,right)/Math.max(left,right)});
+   for(let rep=1;rep<=2;rep++){
+    trials.push({
+     condition,
+     repetition:rep,
+     leftValue:left,
+     rightValue:right,
+     leftPresented:condition==='dots'?left*5:left,
+     rightPresented:condition==='dots'?right*5:right,
+     distance:Math.abs(left-right),
+     ratio:Math.max(left,right)/Math.min(left,right),
+     smaller:Math.min(left,right),
+     larger:Math.max(left,right),
+     correctSide:left>right?'left':'right'
+    });
+   }
   }
  }
-
- return shuffle(symbolic).concat(shuffle(nonsymbolic));
+ return shuffle(trials);
 }
 
 function startComparison(){
- if(comparisonNextTimer){clearTimeout(comparisonNextTimer);comparisonNextTimer=null;}
- comparisonLocked=false;
- cTrials=makeComparisonTrials();
- ci=0;
- cCondition='symbolic';
+ if(!users.find(x=>x.id===currentUserId)){alert('Carrega el perfil d’un usuari abans de començar.');showScreen('home');return}
+ if(comparisonNextTimer){clearTimeout(comparisonNextTimer);comparisonNextTimer=null}
+ const previousComparisonRuns=users.reduce((n,u)=>n+(u.sessions||[]).filter(r=>r.module==='comparison').length,0);
+ comparisonOrder=previousComparisonRuns%2===0?['symbolic','dots']:['dots','symbolic'];
+ comparisonBlocks=comparisonOrder.map(makeComparisonBlock);
+ comparisonBlockIndex=0;
+ comparisonTrialIndex=0;
  data.comparison=[];
  startRun('comparison');
+ if(activeRun){activeRun.conditionOrder=comparisonOrder.slice();activeRun.trialsPerCondition=144;activeRun.totalTrials=288;persistUsers()}
  showScreen('comparisonIntro');
 }
 
-window.beginComparison=function(){
- try{
-  comparisonLocked=false;
-  if(!Array.isArray(cTrials)||cTrials.length===0){
-   cTrials=makeComparisonTrials();
-   ci=0;
-  }
-  if(ci>=cTrials.length)ci=0;
-  showScreen('comparison');
-  renderComparison();
- }catch(error){
-  console.error('Error en iniciar la comparació:',error);
-  alert('No s’ha pogut iniciar la prova: '+(error&&error.message?error.message:'error desconegut'));
- }
-};
-
-function drawComparisonDots(container,count){
- container.innerHTML='';
- const w=Math.max(120,container.clientWidth||260);
- const h=Math.max(150,container.clientHeight||210);
- const placed=[];
- for(let i=0;i<count;i++){
-  let x,y,tries=0;
-  do{
-   x=rand(8,Math.max(9,w-22));
-   y=rand(8,Math.max(9,h-22));
-   tries++;
-  }while(tries<120&&placed.some(p=>Math.hypot(p.x-x,p.y-y)<16));
-  placed.push({x,y});
-  const dot=document.createElement('i');
-  dot.className='compare-dot';
-  dot.style.left=x+'px';
-  dot.style.top=y+'px';
-  container.appendChild(dot);
- }
+function beginComparison(){
+ comparisonBlockIndex=0;
+ comparisonTrialIndex=0;
+ showScreen('comparison');
+ renderComparisonTrial();
 }
 
-function renderComparison(){
- if(ci>=cTrials.length){
-  done('Comparació numèrica completada','Has completat les 72 comparacions. S’han registrat l’encert, el temps de resposta, la distància i la proporció entre quantitats.');
+function beginComparisonSecondBlock(){
+ comparisonBlockIndex=1;
+ comparisonTrialIndex=0;
+ showScreen('comparison');
+ renderComparisonTrial();
+}
+
+function renderComparisonTrial(){
+ if(comparisonBlockIndex>=2){
+  const summary=comparisonSummary();
+  done('Comparació de magnituds completada',`Has completat els 288 assaigs. Nombres: ${summary.symbolic.accuracy}% d'encerts i ${summary.symbolic.meanRT} ms de temps mitjà en respostes correctes. Punts: ${summary.dots.accuracy}% d'encerts i ${summary.dots.meanRT} ms de temps mitjà en respostes correctes.`);
   return;
  }
- const t=cTrials[ci];
- cCondition=t.condition;
- const symbolic=t.condition==='symbolic';
- $('compare-condition').textContent=symbolic?'COMPARACIÓ SIMBÒLICA':'COMPARACIÓ NO SIMBÒLICA';
- $('compare-instruction').textContent=symbolic?'Quin nombre escrit és més gran?':'Quin conjunt conté més punts?';
- $('compare-count').textContent=`${ci+1} / ${cTrials.length}`;
- $('compare-progress').style.width=`${ci/cTrials.length*100}%`;
- $('compare-note').textContent='Selecciona el costat que representa la quantitat més gran.';
- $('compare-left-button').disabled=false;
- $('compare-right-button').disabled=false;
- $('compare-left-number').style.display=symbolic?'block':'none';
- $('compare-right-number').style.display=symbolic?'block':'none';
- $('compare-left-dots').style.display=symbolic?'none':'block';
- $('compare-right-dots').style.display=symbolic?'none':'block';
- if(symbolic){
-  $('compare-left-number').textContent=t.left;
-  $('compare-right-number').textContent=t.right;
- }else{
-  drawComparisonDots($('compare-left-dots'),t.left);
-  drawComparisonDots($('compare-right-dots'),t.right);
+ const block=comparisonBlocks[comparisonBlockIndex];
+ if(comparisonTrialIndex>=block.length){
+  if(comparisonBlockIndex===0){
+   showScreen('comparisonBreak');
+  }else{
+   comparisonBlockIndex=2;
+   renderComparisonTrial();
+  }
+  return;
  }
- cStart=performance.now();
+ const t=block[comparisonTrialIndex];
+ const feedback=$('compare-feedback');
+ feedback.style.display='none';
+ feedback.className='comparison-feedback';
+ feedback.textContent='';
+ const totalTrial=data.comparison.length+1;
+ $('cc').textContent=`${totalTrial} / 288`;
+ $('cp').style.width=`${(data.comparison.length/288)*100}%`;
+ $('ccondition').textContent=t.condition==='symbolic'?'NOMBRES ESCRITS':'CONJUNTS DE PUNTS';
+ $('cquestion').textContent=t.condition==='symbolic'?'Quin nombre és més gran?':'Quin conjunt conté més punts?';
+ $('cnote').textContent='Respon tan ràpidament i amb tanta precisió com puguis.';
+ $('cleft').innerHTML='';
+ $('cright').innerHTML='';
+ if(t.condition==='symbolic'){
+  $('cleft').innerHTML=`<span class="comparison-digit">${t.leftPresented}</span>`;
+  $('cright').innerHTML=`<span class="comparison-digit">${t.rightPresented}</span>`;
+ }else{
+  $('cleft').appendChild(makeDotField(t.leftPresented));
+  $('cright').appendChild(makeDotField(t.rightPresented));
+ }
+ comparisonReady=false;
+ $('c-left-btn').disabled=false;
+ $('c-right-btn').disabled=false;
+ requestAnimationFrame(()=>{comparisonStart=performance.now();comparisonReady=true});
 }
 
-function answerComparison(side,method='button'){
- if(comparisonLocked||!cTrials[ci]||$('comparison').classList.contains('active')===false)return;
- comparisonLocked=true;
- const t=cTrials[ci];
- const elapsed=Math.round(performance.now()-cStart);
- const correct=side===t.larger;
- data.comparison.push({
-  trial:ci+1,
-  condition:t.condition,
-  leftValue:t.left,
-  rightValue:t.right,
-  response:side,
-  correctSide:t.larger,
-  correct,
-  numericalDistance:t.distance,
-  numericalRatio:Number(t.ratio.toFixed(4)),
-  timeMs:elapsed,
-  responseMethod:method
+// Genera punts negres i blancs en posicions aleatòries sobre un fons gris.
+// Es manté el nombre de punts de l'article (5-45), sense comptatge per subitització.
+function makeDotField(count){
+ const field=document.createElement('div');
+ field.className='dotfield';
+ const box=200,diameter=8,minDistance=9;
+ const points=[];
+ let attempts=0;
+ while(points.length<count&&attempts<12000){
+  attempts++;
+  const x=5+Math.random()*(box-10),y=5+Math.random()*(box-10);
+  if(points.every(p=>Math.hypot(p.x-x,p.y-y)>=minDistance))points.push({x,y});
+ }
+ // En pantalles petites o navegadors lents, el nombre de punts sempre es conserva.
+ while(points.length<count){
+  const x=4+Math.random()*(box-8),y=4+Math.random()*(box-8);
+  points.push({x,y});
+ }
+ points.forEach((p,i)=>{
+  const dot=document.createElement('i');
+  dot.className=`comp-dot ${Math.random()<0.5?'black':'white'}`;
+  dot.style.left=`${p.x/box*100}%`;
+  dot.style.top=`${p.y/box*100}%`;
+  field.appendChild(dot);
  });
- $('compare-left-button').disabled=true;
- $('compare-right-button').disabled=true;
- $('compare-note').textContent=correct?'Correcte.':'Incorrecte.';
+ return field;
+}
+
+function answerComparison(side){
+ if(!comparisonReady)return;
+ comparisonReady=false;
+ $('c-left-btn').disabled=true;
+ $('c-right-btn').disabled=true;
+ const block=comparisonBlocks[comparisonBlockIndex];
+ const t=block[comparisonTrialIndex];
+ const rt=Math.max(0,Math.round(performance.now()-comparisonStart));
+ const correct=side===t.correctSide;
+ data.comparison.push({
+  trial:data.comparison.length+1,
+  condition:t.condition,
+  conditionOrder:comparisonOrder.join('_'),
+  trialInCondition:comparisonTrialIndex+1,
+  repetition:t.repetition,
+  leftValue:t.leftValue,
+  rightValue:t.rightValue,
+  leftPresented:t.leftPresented,
+  rightPresented:t.rightPresented,
+  distance:t.distance,
+  ratio:Number(t.ratio.toFixed(4)),
+  smaller:t.smaller,
+  larger:t.larger,
+  correctSide:t.correctSide,
+  responseSide:side,
+  correct,
+  timeMs:rt
+ });
  saveRunProgress('comparison');
- ci++;
+ const feedback=$('compare-feedback');
+ feedback.textContent=correct?'✓':'✕';
+ feedback.className=`comparison-feedback ${correct?'correct':'incorrect'}`;
+ feedback.style.display='flex';
+ $('cnote').textContent=correct?'Correcte.':'Incorrecte.';
+ comparisonTrialIndex++;
+ // Mantenim els estímuls visibles durant un segon mentre es mostra el feedback.
  if(comparisonNextTimer)clearTimeout(comparisonNextTimer);
  comparisonNextTimer=setTimeout(()=>{
   comparisonNextTimer=null;
-  comparisonLocked=false;
-  if($('comparison').classList.contains('active'))renderComparison();
+  renderComparisonTrial();
  },1000);
+}
+
+function handleComparisonKey(e){
+ if(!$('comparison')?.classList.contains('active'))return;
+ if(e.key==='ArrowLeft'||e.key.toLowerCase()==='a'){
+  e.preventDefault();answerComparison('left');
+ }else if(e.key==='ArrowRight'||e.key.toLowerCase()==='l'){
+  e.preventDefault();answerComparison('right');
+ }
+}
+document.addEventListener('keydown',handleComparisonKey);
+
+function comparisonSummary(){
+ const out={};
+ ['symbolic','dots'].forEach(condition=>{
+  const rows=data.comparison.filter(x=>x.condition===condition);
+  const correct=rows.filter(x=>x.correct);
+  out[condition]={
+   trials:rows.length,
+   accuracy:rows.length?Math.round(correct.length/rows.length*1000)/10:0,
+   meanRT:correct.length?Math.round(correct.reduce((a,x)=>a+x.timeMs,0)/correct.length):0
+  };
+ });
+ return out;
 }
 
 /* HISTORIAL, RESULTATS I EXPORTACIÓ */
@@ -1110,7 +1188,7 @@ function cell(v){
 }
 
 function moduleLabel(m){
- return ({mental:'Càlcul mental',estimate:'Estimació',line:'Recta numèrica',comparison:'Comparació numèrica'})[m]||m;
+ return ({mental:'Càlcul mental',estimate:'Estimació',line:'Recta numèrica',comparison:'Comparació de magnituds'})[m]||m;
 }
 
 function rowsForRun(u,run){
@@ -1118,7 +1196,6 @@ function rowsForRun(u,run){
  return (run.results||[]).map(x=>({
   Usuari:p.name,
   Sexe:p.sex,
-  DominanciaManual:p.dominance||'',
   DataNaixement:p.birth,
   NivellEstudis:p.education,
   Dispositiu:p.device,
@@ -1294,23 +1371,11 @@ function resetAll(){
  showScreen('hub');
 }
 
-window.addEventListener('keydown',e=>{
- if(!$('comparison')||!$('comparison').classList.contains('active'))return;
- if(e.key==='ArrowLeft'){
-  e.preventDefault();
-  if(!e.repeat)answerComparison('left','keyboard');
- }else if(e.key==='ArrowRight'){
-  e.preventDefault();
-  if(!e.repeat)answerComparison('right','keyboard');
- }
-});
-
 window.addEventListener('DOMContentLoaded',()=>{
- const comparisonButton=$('begin-comparison-button');
- if(comparisonButton)comparisonButton.addEventListener('click',window.beginComparison);
  loadUsers();
  if(!users.length)$('home-note').textContent='Encara no hi ha usuaris guardats. Crea el primer usuari per començar.';
 });
 </script>
 </body>
 </html>
+
